@@ -1,11 +1,11 @@
 import React from 'react';
+import { LogBox } from 'react-native';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { NavigationContainer } from '@react-navigation/native';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
-import { navigationRef } from '~/navigation/rootNavigation';
-import Routes from '~/navigation';
+import Screens from '~/screens';
 
 import store, { persistor } from './store';
 import theme from './theme';
@@ -16,18 +16,20 @@ if (__DEV__) {
   );
 }
 
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+]);
+
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <NavigationContainer ref={navigationRef}>
-          <ThemeProvider theme={theme}>
-            <Routes />
-          </ThemeProvider>
-        </NavigationContainer>
+        <ThemeProvider theme={theme}>
+          <Screens />
+        </ThemeProvider>
       </PersistGate>
     </Provider>
   );
 };
 
-export default App;
+export default gestureHandlerRootHOC(App);
