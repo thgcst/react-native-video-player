@@ -60,7 +60,11 @@ const Screens: React.FC = () => {
               });
             }}
             selectedTextTrack={selectedSubtitle}
-            onSeek={() => {
+            onSeek={e => {
+              setProgress(previousValue => ({
+                ...previousValue,
+                currentTime: e.currentTime,
+              }));
               controlsRef.current?.setIsSeeking?.(false);
             }}
             onProgress={e => {

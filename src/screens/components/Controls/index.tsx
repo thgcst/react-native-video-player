@@ -146,6 +146,13 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                   loadedValue={playableDuration}
                   maxValue={seekableDuration}
                   onChangeValue={seekTo}
+                  onSeeking={isSeeking => {
+                    if (isSeeking) {
+                      clearControlTimeout();
+                    } else {
+                      resetControlTimeout();
+                    }
+                  }}
                 />
                 <ClickableIcon>
                   <FullScreen />

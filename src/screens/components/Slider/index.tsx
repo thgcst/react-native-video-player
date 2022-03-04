@@ -24,6 +24,7 @@ interface ISlider {
   maxValue: number;
   loadedValue: number;
   onChangeValue?: (value: number) => void;
+  onSeeking?: (value: boolean) => void;
 }
 
 export interface SliderRef {
@@ -31,12 +32,12 @@ export interface SliderRef {
 }
 
 const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
-  { value, maxValue, loadedValue, onChangeValue },
+  { value, maxValue, loadedValue, onChangeValue, onSeeking },
   ref,
 ) => {
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
-  const seekingPosition = useSharedValue(0);
+  const seekingPosition = useSharedValue(value / maxValue || 0);
   const currentPosition = useDerivedValue(() => {
     return value / maxValue || 0;
   }, [value]);
@@ -63,10 +64,12 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
   });
 
   function startSeeking() {
+    onSeeking?.(true);
     setIsSeeking(true);
   }
 
   function finishSeeking() {
+    onSeeking?.(false);
     onChangeValue?.(seekingPosition.value * maxValue);
   }
 
