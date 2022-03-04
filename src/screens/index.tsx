@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HideOnLandscape } from '~/components/OrientationView';
 
 import Video from '~/components/Video';
@@ -16,21 +16,27 @@ import {
 } from './styles';
 
 const Screens: React.FC = () => {
+  const [selectedVideo, setSelectedVideo] = useState(data[0]);
   const orientation = useOrientation();
   return (
     <Container>
       <WrapperVideo portrait={orientation === 'PORTRAIT'}>
         <Video
-          source={{ uri: data.medias.url_hls }}
-          thumbnail={data.thumbnail}
+          source={{ uri: selectedVideo.medias.url_hls }}
+          thumbnail={selectedVideo.thumbnail}
         />
       </WrapperVideo>
       <HideOnLandscape>
         <WrapperContent>
           <List>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
-              <WrapperText first={index === 0} key={item}>
-                <Text>{item}</Text>
+            {data.map((item, index) => (
+              <WrapperText
+                first={index === 0}
+                key={item.id}
+                onPress={() => setSelectedVideo(item)}>
+                <Text selected={selectedVideo.id === item.id}>
+                  {item.teacher}
+                </Text>
               </WrapperText>
             ))}
           </List>

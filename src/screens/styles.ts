@@ -34,12 +34,20 @@ export const List = styled.View`
   border-radius: 8px;
 `;
 
-export const WrapperText = styled.View<{ first: boolean }>`
+export const WrapperText = styled.TouchableOpacity<{ first: boolean }>`
   padding: 8px;
   border-top-width: ${({ first }) => (first ? 0 : 1)}px;
   border-top-color: #787d99;
 `;
 
-export const Text = styled.Text`
-  color: white;
+export const Text = styled.Text<{ selected: boolean }>`
+  ${({ selected }) =>
+    selected
+      ? css`
+          color: white;
+          font-weight: bold;
+        `
+      : css`
+          color: rgb(220, 220, 220);
+        `};
 `;

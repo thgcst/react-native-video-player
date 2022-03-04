@@ -4,13 +4,14 @@ import Video, { VideoProperties } from 'react-native-video';
 import Controls from './Controls';
 import VideoContext, {
   _isPlaying,
+  _isLoading,
   _progress,
   _subtitles,
   _selectedSubtitle,
 } from './VideoContext';
+import LoadingIndicator from './LoadingIndicator';
 
 import { Container } from './styles';
-import { useOrientation } from './hooks/useOrientation';
 
 interface IVideoComponent {
   source: VideoProperties['source'];
@@ -19,6 +20,7 @@ interface IVideoComponent {
 
 const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
   const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(_isPlaying);
+  const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
   const [progress, setProgress] = useState<typeof _progress>(_progress);
   const [subtitles, setSubtitles] = useState<typeof _subtitles>(_subtitles);
   const [selectedSubtitle, setSelectedSubtitle] =
@@ -31,6 +33,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
     <VideoContext.Provider
       value={{
         isPlaying,
+        isLoading,
         progress,
         subtitles,
         selectedSubtitle,
@@ -43,6 +46,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
           style={{
             width: '100%',
             height: '100%',
+            backgroundColor: 'black',
           }}
           pictureInPicture
           ignoreSilentSwitch="ignore"
@@ -54,7 +58,9 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
           controls={false}
           resizeMode="contain"
           paused={!isPlaying}
+          onLoadStart={() => setIsLoading(true)}
           onLoad={e => {
+            setIsLoading(false);
             setSubtitles(
               e.textTracks
                 .filter(track => track.language)
@@ -82,13 +88,17 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
           }}
           progressUpdateInterval={1000}
         />
-        <Controls
-          ref={controlsRef}
-          seekTo={e => videoRef.current?.seek(e)}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          setSelectedSubtitle={setSelectedSubtitle}
-        />
+        {isLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <Controls
+            ref={controlsRef}
+            seekTo={e => videoRef.current?.seek(e)}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            setSelectedSubtitle={setSelectedSubtitle}
+          />
+        )}
       </Container>
     </VideoContext.Provider>
   );
