@@ -36,7 +36,8 @@ const SubtitlesMenu: React.FC<ISubtitlesMenu> = ({
           <Clickable
             onPress={() =>
               setSelectedSubtitle({ type: 'title', value: subtitle.title })
-            }>
+            }
+            key={subtitle.title}>
             <Name selected={selectedSubtitle?.value === subtitle.title}>
               {subtitle.title}
             </Name>
