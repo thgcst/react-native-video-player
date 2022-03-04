@@ -1,8 +1,6 @@
 import React, { ElementRef, useRef, useState } from 'react';
 import Video, { VideoProperties } from 'react-native-video';
 
-import Metrics from '~/theme/metrics';
-
 import Controls from './Controls';
 import VideoContext, {
   _isPlaying,
@@ -12,6 +10,7 @@ import VideoContext, {
 } from './VideoContext';
 
 import { Container } from './styles';
+import { useOrientation } from './hooks/useOrientation';
 
 interface IVideoComponent {
   source: VideoProperties['source'];
@@ -40,9 +39,10 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
         <Video
           source={source}
           ref={videoRef}
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{
-            width: Metrics.screenWidth,
-            height: (Metrics.screenWidth * 9) / 16,
+            width: '100%',
+            height: '100%',
           }}
           pictureInPicture
           ignoreSilentSwitch="ignore"

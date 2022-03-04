@@ -5,8 +5,10 @@ import React, {
   useImperativeHandle,
   ElementRef,
   useContext,
+  useEffect,
 } from 'react';
 import { AnimatePresence } from 'moti';
+import Orientation from 'react-native-orientation';
 
 import {
   Clickable,
@@ -28,6 +30,7 @@ import {
 import Slider from '../Slider';
 import VideoContext from '../VideoContext';
 import SubtitlesMenu from '../SubtitlesMenu';
+import { useOrientation } from '../hooks/useOrientation';
 
 interface IControls {
   onPlay: () => void;
@@ -61,6 +64,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
+  const orientation = useOrientation();
 
   const setControlTimeout = () => {
     controlTimeout.current = setTimeout(() => {
@@ -82,6 +86,11 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   useImperativeHandle(ref, () => ({
     setIsSeeking: sliderRef.current?.setIsSeeking,
   }));
+
+  const lockOrientation = () => {
+    Orientation.lockToLandscape();
+    Orientation.unlockAllOrientations();
+  };
 
   return (
     <>
@@ -154,8 +163,8 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                     }
                   }}
                 />
-                <ClickableIcon>
-                  <FullScreen />
+                <ClickableIcon onPress={lockOrientation}>
+                  <FullScreen isFullscreen={orientation !== 'PORTRAIT'} />
                 </ClickableIcon>
               </WrapperFooter>
             </Container>

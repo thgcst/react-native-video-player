@@ -91,6 +91,8 @@ export const ClickableIcon = styled.TouchableOpacity.attrs({
   hitSlop: { top: 15, right: 15, bottom: 15, left: 15 },
 })``;
 
-export const FullScreen = styled(FullScreenIcon)``;
+export const FullScreen = styled(FullScreenIcon)<{ isFullscreen: boolean }>`
+  margin-left: ${({ isFullscreen }) => (isFullscreen ? 46 : 20)}px;
+`;
 
 export const Subtitles = styled(SubtitlesIcon)``;
