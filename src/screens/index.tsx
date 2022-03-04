@@ -30,8 +30,11 @@ const Screens: React.FC = () => {
           }}
           pictureInPicture
           ignoreSilentSwitch="ignore"
+          allowsExternalPlayback
           playInBackground
+          playWhenInactive
           poster={data.thumbnail}
+          posterResizeMode="cover"
           controls={false}
           resizeMode="contain"
           paused={!isPlaying}

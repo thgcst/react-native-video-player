@@ -56,20 +56,20 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
 
   const setControlTimeout = () => {
-    // controlTimeout.current = setTimeout(() => {
-    //   setIsVisible(false);
-    // }, TIME_TO_AUTO_HIDE);
+    controlTimeout.current = setTimeout(() => {
+      setIsVisible(false);
+    }, TIME_TO_AUTO_HIDE);
   };
 
   const clearControlTimeout = () => {
-    // if (controlTimeout.current) {
-    //   clearTimeout(controlTimeout.current);
-    // }
+    if (controlTimeout.current) {
+      clearTimeout(controlTimeout.current);
+    }
   };
 
   const resetControlTimeout = () => {
-    // clearControlTimeout();
-    // setControlTimeout();
+    clearControlTimeout();
+    setControlTimeout();
   };
 
   useImperativeHandle(ref, () => ({
