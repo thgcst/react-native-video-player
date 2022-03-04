@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
 
+import CloseIcon from '~/assets/icons/player/close.svg';
+
 export const Container = styled.View`
   align-items: center;
   justify-content: center;
@@ -24,4 +26,15 @@ export const Name = styled.Text<IName>`
   color: white;
   text-decoration: ${({ selected }) => (selected ? 'underline' : 'none')};
   text-decoration-color: white;
+`;
+
+export const WrapperClose = styled.TouchableOpacity`
+  margin-top: 20px;
+`;
+
+export const Close = styled(CloseIcon).attrs({
+  width: 32,
+  height: 32,
+})`
+  fill: white;
 `;

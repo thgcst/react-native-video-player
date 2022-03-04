@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "androidclean": "cd android && ./gradlew clean && cd ..",
     "release": "cd android && ./gradlew app:assembleRelease && cd ..",
-    "ios": "react-native run-ios",
+    "ios": "open /Applications/Reactotron.app && react-native run-ios",
     "ios8": "react-native run-ios --simulator='iPhone 8'",
     "start": "react-native start --reset-cache",
     "test": "jest",

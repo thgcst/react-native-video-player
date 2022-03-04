@@ -181,6 +181,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
           setSelectedSubtitle(e);
           setIsSubtitleVisible(false);
         }}
+        closeMenu={() => setIsSubtitleVisible(false)}
       />
     </>
   );

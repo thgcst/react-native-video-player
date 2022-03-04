@@ -2,7 +2,14 @@ import React, { useContext } from 'react';
 import Modal from 'react-native-modal';
 import VideoContext from '~/screens/VideoContext';
 
-import { Container, Title, Clickable, Name } from './styles';
+import {
+  Container,
+  Title,
+  Clickable,
+  Name,
+  WrapperClose,
+  Close,
+} from './styles';
 
 interface ISubtitlesMenu {
   isVisible: boolean;
@@ -15,11 +22,13 @@ interface ISubtitlesMenu {
       | undefined
     >
   >;
+  closeMenu: () => void;
 }
 
 const SubtitlesMenu: React.FC<ISubtitlesMenu> = ({
   isVisible,
   setSelectedSubtitle,
+  closeMenu,
 }) => {
   const { subtitles, selectedSubtitle } = useContext(VideoContext);
 
@@ -43,6 +52,9 @@ const SubtitlesMenu: React.FC<ISubtitlesMenu> = ({
             </Name>
           </Clickable>
         ))}
+        <WrapperClose onPress={closeMenu}>
+          <Close />
+        </WrapperClose>
       </Container>
     </Modal>
   );

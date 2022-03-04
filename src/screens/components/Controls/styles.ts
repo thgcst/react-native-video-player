@@ -90,4 +90,5 @@ export const WrapperFooter = styled.TouchableOpacity.attrs({
 export const ClickableIcon = styled.TouchableOpacity``;
 
 export const FullScreen = styled(FullScreenIcon)``;
+
 export const Subtitles = styled(SubtitlesIcon)``;
