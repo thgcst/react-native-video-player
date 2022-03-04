@@ -52,7 +52,14 @@ const Screens: React.FC = () => {
             resizeMode="contain"
             paused={!isPlaying}
             onLoad={e => {
-              setSubtitles(e.textTracks);
+              setSubtitles(
+                e.textTracks
+                  .filter(track => track.language)
+                  .map(track => ({
+                    ...track,
+                    title: track.title.replace('subs:', ''),
+                  })),
+              );
               setProgress({
                 currentTime: e.currentTime,
                 seekableDuration: e.duration,
