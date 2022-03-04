@@ -33,7 +33,10 @@ const SubtitlesMenu: React.FC<ISubtitlesMenu> = ({
   const { subtitles, selectedSubtitle } = useContext(VideoContext);
 
   return (
-    <Modal isVisible={isVisible} backdropOpacity={0.8}>
+    <Modal
+      isVisible={isVisible}
+      backdropOpacity={0.8}
+      onBackdropPress={closeMenu}>
       <Container>
         <Title>Legendas</Title>
         <Clickable onPress={() => setSelectedSubtitle(undefined)}>

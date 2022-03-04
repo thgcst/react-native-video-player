@@ -87,7 +87,9 @@ export const WrapperFooter = styled.TouchableOpacity.attrs({
   padding: 0 16px;
 `;
 
-export const ClickableIcon = styled.TouchableOpacity``;
+export const ClickableIcon = styled.TouchableOpacity.attrs({
+  hitSlop: { top: 15, right: 15, bottom: 15, left: 15 },
+})``;
 
 export const FullScreen = styled(FullScreenIcon)``;
 
