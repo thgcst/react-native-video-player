@@ -1,20 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { ElementRef, useRef, useState } from 'react';
 import Video, { OnProgressData } from 'react-native-video';
-// import Slider from 'react-native-slider';
 
 import Metrics from '~/theme/metrics';
 
 import data from './data';
-import Slider from './components/Slider';
-
-import {
-  Button,
-  Container,
-  WrapperButtons,
-  WrapperVideo,
-  TimeText,
-} from './styles';
 import Controls from './components/Controls';
+
+import { Container, WrapperVideo } from './styles';
 
 const Screens: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -24,6 +16,7 @@ const Screens: React.FC = () => {
     seekableDuration: 0,
   });
   const videoRef = useRef<Video>(null);
+  const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
   return (
     <Container>
@@ -49,39 +42,25 @@ const Screens: React.FC = () => {
               playableDuration: 0,
             });
           }}
+          onSeek={() => {
+            controlsRef.current?.setIsSeeking?.(false);
+          }}
           onProgress={e => {
             setProgress(e);
           }}
           progressUpdateInterval={1000}
         />
         <Controls
-          onRewind={() => videoRef.current?.seek(progress.currentTime - 10)}
-          onFastForward={() =>
-            videoRef.current?.seek(progress.currentTime + 10)
-          }
+          ref={controlsRef}
+          seekTo={e => videoRef.current?.seek(e)}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           isPlaying={isPlaying}
+          currentTime={progress.currentTime}
+          playableDuration={progress.playableDuration}
+          seekableDuration={progress.seekableDuration}
         />
       </WrapperVideo>
-      <WrapperButtons>
-        <TimeText>
-          {new Date(progress.currentTime * 1000).toISOString().substr(11, 8)}
-        </TimeText>
-        {/* <Slider
-          value={progress.currentTime}
-          minimumValue={0}
-          maximumValue={progress.seekableDuration}
-          // onSlidingStart={() => setIsPlaying(false)}
-          onSlidingComplete={e => {
-            videoRef.current?.seek(e);
-            // setIsPlaying(true);
-          }}
-          style={{ flex: 1 }}
-          // onValueChange={value => this.setState({ value })}
-        /> */}
-        <Slider />
-      </WrapperButtons>
     </Container>
   );
 };

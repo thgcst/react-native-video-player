@@ -1,4 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, {
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+  ElementRef,
+} from 'react';
 import { AnimatePresence } from 'moti';
 
 import {
@@ -13,26 +19,41 @@ import {
   FastForward,
   HiddenPlayPauseButton,
   WrapperSecondaryControls,
+  FullScreen,
 } from './styles';
+import Slider from '../Slider';
 
 interface IControls {
-  onRewind: () => void;
   onPlay: () => void;
   onPause: () => void;
-  onFastForward: () => void;
+
   isPlaying: boolean;
+  currentTime: number;
+  playableDuration: number;
+  seekableDuration: number;
+  seekTo: (value: number) => void;
 }
 
-const Controls: React.FC<IControls> = ({
-  onRewind,
-  onPlay,
-  onPause,
-  onFastForward,
-  isPlaying,
-}) => {
+export interface ControlsRef {
+  setIsSeeking?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
+  {
+    onPlay,
+    onPause,
+    isPlaying,
+    currentTime,
+    playableDuration,
+    seekableDuration,
+    seekTo,
+  },
+  ref,
+) => {
   const TIME_TO_AUTO_HIDE = 5 * 1000; // 5 sec
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
+  const sliderRef = useRef<ElementRef<typeof Slider>>(null);
 
   const setControlTimeout = () => {
     // controlTimeout.current = setTimeout(() => {
@@ -50,6 +71,10 @@ const Controls: React.FC<IControls> = ({
     // clearControlTimeout();
     // setControlTimeout();
   };
+
+  useImperativeHandle(ref, () => ({
+    setIsSeeking: sliderRef.current?.setIsSeeking,
+  }));
 
   return (
     <Clickable
@@ -77,7 +102,7 @@ const Controls: React.FC<IControls> = ({
               <ControlButton
                 onPress={() => {
                   resetControlTimeout();
-                  onRewind();
+                  seekTo(currentTime - 10);
                 }}>
                 <Rewind />
                 <ControlButtonText>-10s</ControlButtonText>
@@ -96,13 +121,22 @@ const Controls: React.FC<IControls> = ({
               <ControlButton
                 onPress={() => {
                   resetControlTimeout();
-                  onFastForward();
+                  seekTo(currentTime + 10);
                 }}>
                 <FastForward />
                 <ControlButtonText>+10s</ControlButtonText>
               </ControlButton>
             </WrapperCenterButtons>
-            <WrapperSecondaryControls />
+            <WrapperSecondaryControls>
+              <Slider
+                ref={sliderRef}
+                value={currentTime}
+                loadedValue={playableDuration}
+                maxValue={seekableDuration}
+                onChangeValue={seekTo}
+              />
+              <FullScreen />
+            </WrapperSecondaryControls>
           </Container>
         )}
       </AnimatePresence>
@@ -123,4 +157,4 @@ const Controls: React.FC<IControls> = ({
   );
 };
 
-export default Controls;
+export default forwardRef(Controls);

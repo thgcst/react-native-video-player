@@ -1,31 +1,31 @@
 {
   "env": {
-      "es2021": true,
-      "react-native/react-native": true
+    "es2021": true,
+    "react-native/react-native": true
   },
   "extends": [
-      "plugin:react/recommended",
-      "airbnb",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended"
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "globals": {
-      "__DEV__": "readonly"
+    "__DEV__": "readonly"
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-      "ecmaFeatures": {
-          "jsx": true
-      },
-      "ecmaVersion": 12,
-      "sourceType": "module"
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
   "plugins": [
-      "react",
-      "react-hooks",
-      "@typescript-eslint",
-      "prettier",
-      "react-native"
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier",
+    "react-native"
   ],
   "rules": {
     "prettier/prettier": "error",
@@ -35,12 +35,11 @@
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".tsx"
-        ]
+        "extensions": [".tsx"]
       }
     ],
     "import/extensions": [
@@ -52,11 +51,10 @@
       }
     ],
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": [
-      "error"
-    ],
-    "@typescript-eslint/explicit-module-boundary-types" : "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     "react/react-in-jsx-scope": "off",
     "import/prefer-default-export": "off"
   },

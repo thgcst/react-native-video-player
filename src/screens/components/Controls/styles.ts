@@ -4,6 +4,7 @@ import { MotiView } from 'moti';
 import RewindIcon from '~/assets/icons/player/rewind.svg';
 import PauseIcon from '~/assets/icons/player/pause.svg';
 import PlayIcon from '~/assets/icons/player/play.svg';
+import FullScreenIcon from '~/assets/icons/player/fullscreen.svg';
 
 export const Clickable = styled.TouchableOpacity.attrs({ activeOpacity: 1 })`
   position: absolute;
@@ -63,9 +64,15 @@ export const HiddenPlayPauseButton = styled.TouchableOpacity`
   position: absolute;
 `;
 
-export const WrapperSecondaryControls = styled.View`
+export const WrapperSecondaryControls = styled.TouchableOpacity.attrs({
+  activeOpacity: 1,
+})`
   flex: 1;
   width: 100%;
   align-items: center;
-  border: 1px solid red;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 16px;
 `;
+
+export const FullScreen = styled(FullScreenIcon)``;
