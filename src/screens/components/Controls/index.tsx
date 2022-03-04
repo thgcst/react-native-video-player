@@ -51,7 +51,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   ref,
 ) => {
   const TIME_TO_AUTO_HIDE = 5 * 1000; // 5 sec
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
 
