@@ -5,6 +5,7 @@ import RewindIcon from '~/assets/icons/player/rewind.svg';
 import PauseIcon from '~/assets/icons/player/pause.svg';
 import PlayIcon from '~/assets/icons/player/play.svg';
 import FullScreenIcon from '~/assets/icons/player/fullscreen.svg';
+import SubtitlesIcon from '~/assets/icons/player/subtitles.svg';
 
 export const Clickable = styled.TouchableOpacity.attrs({ activeOpacity: 1 })`
   position: absolute;
@@ -64,7 +65,7 @@ export const HiddenPlayPauseButton = styled.TouchableOpacity`
   position: absolute;
 `;
 
-export const WrapperSecondaryControls = styled.TouchableOpacity.attrs({
+export const WrapperHeader = styled.View.attrs({
   activeOpacity: 1,
 })`
   flex: 1;
@@ -75,4 +76,18 @@ export const WrapperSecondaryControls = styled.TouchableOpacity.attrs({
   padding: 0 16px;
 `;
 
+export const WrapperFooter = styled.TouchableOpacity.attrs({
+  activeOpacity: 1,
+})`
+  flex: 1;
+  width: 100%;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 16px;
+`;
+
+export const ClickableIcon = styled.TouchableOpacity``;
+
 export const FullScreen = styled(FullScreenIcon)``;
+export const Subtitles = styled(SubtitlesIcon)``;

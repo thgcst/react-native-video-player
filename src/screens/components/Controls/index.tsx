@@ -4,6 +4,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
   ElementRef,
+  useContext,
 } from 'react';
 import { AnimatePresence } from 'moti';
 
@@ -18,20 +19,29 @@ import {
   Rewind,
   FastForward,
   HiddenPlayPauseButton,
-  WrapperSecondaryControls,
+  WrapperHeader,
+  WrapperFooter,
+  ClickableIcon,
   FullScreen,
+  Subtitles,
 } from './styles';
 import Slider from '../Slider';
+import VideoContext from '~/screens/VideoContext';
+import SubtitlesMenu from '../SubtitlesMenu';
 
 interface IControls {
   onPlay: () => void;
   onPause: () => void;
-
-  isPlaying: boolean;
-  currentTime: number;
-  playableDuration: number;
-  seekableDuration: number;
   seekTo: (value: number) => void;
+  setSelectedSubtitle: React.Dispatch<
+    React.SetStateAction<
+      | {
+          type: 'title';
+          value: string;
+        }
+      | undefined
+    >
+  >;
 }
 
 export interface ControlsRef {
@@ -39,25 +49,22 @@ export interface ControlsRef {
 }
 
 const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
-  {
-    onPlay,
-    onPause,
-    isPlaying,
-    currentTime,
-    playableDuration,
-    seekableDuration,
-    seekTo,
-  },
+  { onPlay, onPause, seekTo, setSelectedSubtitle },
   ref,
 ) => {
   const TIME_TO_AUTO_HIDE = 5 * 1000; // 5 sec
-  const [isVisible, setIsVisible] = useState(false);
+  const {
+    isPlaying,
+    progress: { currentTime, playableDuration, seekableDuration },
+  } = useContext(VideoContext);
+  const [isControlsVisible, setIsControlsVisible] = useState(false);
+  const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
 
   const setControlTimeout = () => {
     controlTimeout.current = setTimeout(() => {
-      setIsVisible(false);
+      setIsControlsVisible(false);
     }, TIME_TO_AUTO_HIDE);
   };
 
@@ -77,83 +84,98 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   }));
 
   return (
-    <Clickable
-      onPress={() => {
-        if (isVisible) {
-          clearControlTimeout();
-        } else {
-          setControlTimeout();
-        }
-        setIsVisible(e => !e);
-      }}>
-      <AnimatePresence>
-        {isVisible && (
-          <Container
-            from={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            exitTransition={{ type: 'timing', duration: 300 }}
-            transition={{
-              type: 'timing',
-              duration: 200,
-            }}>
-            <WrapperSecondaryControls />
-            <WrapperCenterButtons>
-              <ControlButton
-                onPress={() => {
-                  resetControlTimeout();
-                  seekTo(currentTime - 10);
-                }}>
-                <Rewind />
-                <ControlButtonText>-10s</ControlButtonText>
-              </ControlButton>
-              <ControlButton
-                onPress={() => {
-                  resetControlTimeout();
-                  if (isPlaying) {
-                    onPause();
-                  } else {
-                    onPlay();
-                  }
-                }}>
-                {isPlaying ? <Pause /> : <Play />}
-              </ControlButton>
-              <ControlButton
-                onPress={() => {
-                  resetControlTimeout();
-                  seekTo(currentTime + 10);
-                }}>
-                <FastForward />
-                <ControlButtonText>+10s</ControlButtonText>
-              </ControlButton>
-            </WrapperCenterButtons>
-            <WrapperSecondaryControls>
-              <Slider
-                ref={sliderRef}
-                value={currentTime}
-                loadedValue={playableDuration}
-                maxValue={seekableDuration}
-                onChangeValue={seekTo}
-              />
-              <FullScreen />
-            </WrapperSecondaryControls>
-          </Container>
+    <>
+      <Clickable
+        onPress={() => {
+          if (isControlsVisible) {
+            clearControlTimeout();
+          } else {
+            setControlTimeout();
+          }
+          setIsControlsVisible(e => !e);
+        }}>
+        <AnimatePresence>
+          {isControlsVisible && (
+            <Container
+              from={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              exitTransition={{ type: 'timing', duration: 300 }}
+              transition={{
+                type: 'timing',
+                duration: 200,
+              }}>
+              <WrapperHeader>
+                <ClickableIcon onPress={() => setIsSubtitleVisible(true)}>
+                  <Subtitles />
+                </ClickableIcon>
+              </WrapperHeader>
+              <WrapperCenterButtons>
+                <ControlButton
+                  onPress={() => {
+                    resetControlTimeout();
+                    seekTo(currentTime - 10);
+                  }}>
+                  <Rewind />
+                  <ControlButtonText>-10s</ControlButtonText>
+                </ControlButton>
+                <ControlButton
+                  onPress={() => {
+                    resetControlTimeout();
+                    if (isPlaying) {
+                      onPause();
+                    } else {
+                      onPlay();
+                    }
+                  }}>
+                  {isPlaying ? <Pause /> : <Play />}
+                </ControlButton>
+                <ControlButton
+                  onPress={() => {
+                    resetControlTimeout();
+                    seekTo(currentTime + 10);
+                  }}>
+                  <FastForward />
+                  <ControlButtonText>+10s</ControlButtonText>
+                </ControlButton>
+              </WrapperCenterButtons>
+              <WrapperFooter>
+                <Slider
+                  ref={sliderRef}
+                  value={currentTime}
+                  loadedValue={playableDuration}
+                  maxValue={seekableDuration}
+                  onChangeValue={seekTo}
+                />
+                <ClickableIcon>
+                  <FullScreen />
+                </ClickableIcon>
+              </WrapperFooter>
+            </Container>
+          )}
+        </AnimatePresence>
+        {!isControlsVisible && (
+          <HiddenPlayPauseButton
+            onPress={() => {
+              resetControlTimeout();
+              if (isPlaying) {
+                onPause();
+              } else {
+                onPlay();
+              }
+              setIsControlsVisible(true);
+            }}
+          />
         )}
-      </AnimatePresence>
-      {!isVisible && (
-        <HiddenPlayPauseButton
-          onPress={() => {
-            resetControlTimeout();
-            if (isPlaying) {
-              onPause();
-            } else {
-              onPlay();
-            }
-            setIsVisible(true);
-          }}
-        />
-      )}
-    </Clickable>
+      </Clickable>
+      <SubtitlesMenu
+        isVisible={isSubtitleVisible}
+        setSelectedSubtitle={e => {
+          setSelectedSubtitle(e);
+          setIsSubtitleVisible(false);
+        }}
+      />
+    </>
   );
 };
 
