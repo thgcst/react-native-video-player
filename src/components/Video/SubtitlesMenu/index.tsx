@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Modal from 'react-native-modal';
-import VideoContext from '~/screens/VideoContext';
+import VideoContext from '../VideoContext';
 
 import {
   Container,

@@ -26,7 +26,7 @@ import {
   Subtitles,
 } from './styles';
 import Slider from '../Slider';
-import VideoContext from '~/screens/VideoContext';
+import VideoContext from '../VideoContext';
 import SubtitlesMenu from '../SubtitlesMenu';
 
 interface IControls {
