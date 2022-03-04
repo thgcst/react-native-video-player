@@ -118,7 +118,7 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
       <Container collapsable={false}>
         <PanGestureHandler onGestureEvent={gestureHandler}>
           <Thumb
-            hitSlop={{ top: 15, bottom: 15, right: 15, left: 15 }}
+            hitSlop={{ top: 25, bottom: 25, right: 25, left: 25 }}
             style={thumbStyle}
           />
         </PanGestureHandler>
