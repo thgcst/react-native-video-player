@@ -12,7 +12,7 @@ export const WrapperVideo = styled.View<{ portrait: boolean }>`
     portrait
       ? css`
           width: ${({ theme }) => theme.metrics.screenWidth}px;
-          height: ${({ theme }) => (theme.metrics.screenWidth / 16) * 9}px;
+          height: ${({ theme }) => (theme.metrics.screenWidth / 16) * 9 + 50}px;
         `
       : css`
           position: absolute;

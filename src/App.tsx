@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -25,6 +25,7 @@ const App: React.FC = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <ThemeProvider theme={theme}>
+          <StatusBar backgroundColor="#282a35" barStyle="light-content" />
           <Screens />
         </ThemeProvider>
       </PersistGate>

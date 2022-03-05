@@ -3,6 +3,7 @@ import { OnLoadData, OnProgressData } from 'react-native-video';
 
 export const _isPlaying = true as boolean;
 export const _isLoading = false as boolean;
+export const _audioOnly = false as boolean;
 export const _progress: OnProgressData = {
   currentTime: 0,
   playableDuration: 0,
@@ -19,6 +20,7 @@ export const _selectedSubtitle = undefined as
 interface IInitialValue {
   isPlaying: typeof _isPlaying;
   isLoading: typeof _isLoading;
+  audioOnly: typeof _audioOnly;
   progress: typeof _progress;
   subtitles: typeof _subtitles;
   selectedSubtitle: typeof _selectedSubtitle;
@@ -27,6 +29,7 @@ interface IInitialValue {
 const initialValue: IInitialValue = {
   isPlaying: _isPlaying,
   isLoading: _isLoading,
+  audioOnly: _audioOnly,
   progress: _progress,
   subtitles: _subtitles,
   selectedSubtitle: _selectedSubtitle,

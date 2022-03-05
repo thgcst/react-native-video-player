@@ -59,6 +59,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   const {
     isPlaying,
     progress: { currentTime, playableDuration, seekableDuration },
+    audioOnly,
   } = useContext(VideoContext);
   const [isControlsVisible, setIsControlsVisible] = useState(false);
   const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
@@ -83,12 +84,20 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
     setControlTimeout();
   };
 
+  useEffect(() => {
+    return () => clearControlTimeout();
+  }, []);
+
   useImperativeHandle(ref, () => ({
     setIsSeeking: sliderRef.current?.setIsSeeking,
   }));
 
-  const lockOrientation = () => {
-    Orientation.lockToLandscape();
+  const toggleFullScreen = () => {
+    if (orientation === 'PORTRAIT') {
+      Orientation.lockToLandscape();
+    } else {
+      Orientation.lockToPortrait();
+    }
     Orientation.unlockAllOrientations();
   };
 
@@ -115,8 +124,10 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                 duration: 200,
               }}>
               <WrapperHeader>
-                <ClickableIcon onPress={() => setIsSubtitleVisible(true)}>
-                  <Subtitles />
+                <ClickableIcon
+                  disabled={audioOnly}
+                  onPress={() => setIsSubtitleVisible(true)}>
+                  {!audioOnly && <Subtitles />}
                 </ClickableIcon>
               </WrapperHeader>
               <WrapperCenterButtons>
@@ -163,8 +174,10 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                     }
                   }}
                 />
-                <ClickableIcon onPress={lockOrientation}>
-                  <FullScreen isFullscreen={orientation !== 'PORTRAIT'} />
+                <ClickableIcon disabled={audioOnly} onPress={toggleFullScreen}>
+                  {!audioOnly && (
+                    <FullScreen isFullscreen={orientation !== 'PORTRAIT'} />
+                  )}
                 </ClickableIcon>
               </WrapperFooter>
             </Container>

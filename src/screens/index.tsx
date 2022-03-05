@@ -23,6 +23,7 @@ const Screens: React.FC = () => {
       <WrapperVideo portrait={orientation === 'PORTRAIT'}>
         <Video
           source={{ uri: selectedVideo.medias.url_hls }}
+          audioSource={{ uri: selectedVideo.medias.url_audio }}
           thumbnail={selectedVideo.thumbnail}
         />
       </WrapperVideo>

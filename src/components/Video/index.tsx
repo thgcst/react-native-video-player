@@ -1,27 +1,41 @@
 import React, { ElementRef, useRef, useState } from 'react';
 import Video, { VideoProperties } from 'react-native-video';
+import { Switch } from 'react-native';
+import Orientation from 'react-native-orientation';
 
 import Controls from './Controls';
 import VideoContext, {
   _isPlaying,
   _isLoading,
+  _audioOnly,
   _progress,
   _subtitles,
   _selectedSubtitle,
 } from './VideoContext';
 import LoadingIndicator from './LoadingIndicator';
 
-import { Container } from './styles';
+import { HideOnLandscape } from '../OrientationView';
+
+import { Container, WrapperSwitch, SwitchText } from './styles';
 
 interface IVideoComponent {
   source: VideoProperties['source'];
+  audioSource: VideoProperties['source'];
   thumbnail: VideoProperties['poster'];
 }
 
-const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
+const VideoComponent: React.FC<IVideoComponent> = ({
+  source,
+  audioSource,
+  thumbnail,
+}) => {
   const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(_isPlaying);
   const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
+  const [audioOnly, setAudioOnly] = useState<typeof _audioOnly>(_audioOnly);
   const [progress, setProgress] = useState<typeof _progress>(_progress);
+  const [previousCurrentTime, setPreviousCurrentTime] = useState<number | null>(
+    null,
+  );
   const [subtitles, setSubtitles] = useState<typeof _subtitles>(_subtitles);
   const [selectedSubtitle, setSelectedSubtitle] =
     useState<typeof _selectedSubtitle>(_selectedSubtitle);
@@ -29,18 +43,31 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
   const videoRef = useRef<Video>(null);
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
+  const toggleAudioOnly = () => {
+    setPreviousCurrentTime(progress.currentTime);
+
+    if (audioOnly) {
+      setAudioOnly(false);
+      Orientation.unlockAllOrientations();
+    } else {
+      setAudioOnly(true);
+      Orientation.lockToPortrait();
+    }
+  };
+
   return (
     <VideoContext.Provider
       value={{
         isPlaying,
         isLoading,
+        audioOnly,
         progress,
         subtitles,
         selectedSubtitle,
       }}>
       <Container>
         <Video
-          source={source}
+          source={audioOnly ? audioSource : source}
           ref={videoRef}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
@@ -61,19 +88,16 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
           onLoadStart={() => setIsLoading(true)}
           onLoad={e => {
             setIsLoading(false);
-            setSubtitles(
-              e.textTracks
-                .filter(track => track.language)
-                .map(track => ({
-                  ...track,
-                  title: track.title.replace('subs:', ''),
-                })),
-            );
+            setSubtitles(e.textTracks);
             setProgress({
               currentTime: e.currentTime,
               seekableDuration: e.duration,
               playableDuration: 0,
             });
+            if (previousCurrentTime) {
+              videoRef.current?.seek(previousCurrentTime);
+              setPreviousCurrentTime(null);
+            }
           }}
           selectedTextTrack={selectedSubtitle}
           onSeek={e => {
@@ -100,6 +124,16 @@ const VideoComponent: React.FC<IVideoComponent> = ({ source, thumbnail }) => {
           />
         )}
       </Container>
+      <HideOnLandscape>
+        <WrapperSwitch>
+          <SwitchText>Somente áudio</SwitchText>
+          <Switch
+            ios_backgroundColor="#e0bf5a"
+            value={audioOnly}
+            onValueChange={toggleAudioOnly}
+          />
+        </WrapperSwitch>
+      </HideOnLandscape>
     </VideoContext.Provider>
   );
 };

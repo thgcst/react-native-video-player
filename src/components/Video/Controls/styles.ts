@@ -60,8 +60,8 @@ export const FastForward = styled(RewindIcon)`
 `;
 
 export const HiddenPlayPauseButton = styled.TouchableOpacity`
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
   position: absolute;
 `;
 
