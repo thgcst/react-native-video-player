@@ -5,7 +5,7 @@ export const HideOnLandscape: React.FC = ({ children }) => {
   const [orientation, setOrientation] = useState('PORTRAIT');
   useOrientationChange(setOrientation);
 
-  if (orientation === 'PORTRAIT') {
+  if (orientation === 'PORTRAIT' || orientation === 'UNKNOWN') {
     return <>{children}</>;
   }
 
@@ -16,7 +16,7 @@ export const HideOnPortrait: React.FC = ({ children }) => {
   const [orientation, setOrientation] = useState('PORTRAIT');
   useOrientationChange(setOrientation);
 
-  if (orientation === 'PORTRAIT') {
+  if (orientation === 'PORTRAIT' || orientation === 'UNKNOWN') {
     return <></>;
   }
 

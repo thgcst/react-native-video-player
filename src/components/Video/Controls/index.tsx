@@ -95,7 +95,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   }));
 
   const toggleFullScreen = () => {
-    if (orientation === 'PORTRAIT') {
+    if (orientation === 'PORTRAIT' || orientation === 'UNKNOWN') {
       Orientation.lockToLandscape();
     } else {
       Orientation.lockToPortrait();
@@ -130,7 +130,9 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                 type: 'timing',
                 duration: 200,
               }}
-              portrait={orientation === 'PORTRAIT'}>
+              portrait={
+                orientation === 'PORTRAIT' || orientation === 'UNKNOWN'
+              }>
               <WrapperHeader>
                 <ClickableIcon
                   disabled={audioOnly}

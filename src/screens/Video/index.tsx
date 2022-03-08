@@ -28,8 +28,8 @@ const VideoScreen: React.FC = () => {
 
   useLayoutEffect(() => {
     setOptions({
-      headerShown: orientation === 'PORTRAIT',
-      gestureEnabled: orientation === 'PORTRAIT',
+      headerShown: orientation === 'PORTRAIT' || orientation === 'UNKNOWN',
+      gestureEnabled: orientation === 'PORTRAIT' || orientation === 'UNKNOWN',
       title: selectedVideo.className,
     });
   }, [orientation]);
@@ -39,7 +39,8 @@ const VideoScreen: React.FC = () => {
   return (
     <Container>
       <OrientationLocker orientation={UNLOCK} />
-      <WrapperVideo portrait={orientation === 'PORTRAIT'}>
+      <WrapperVideo
+        portrait={orientation === 'PORTRAIT' || orientation === 'UNKNOWN'}>
         <Video
           source={{ uri: selectedVideo.medias.url_hls }}
           audioSource={{ uri: selectedVideo.medias.url_audio }}
