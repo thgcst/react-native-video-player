@@ -1,5 +1,6 @@
-import React from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import React, { useLayoutEffect } from 'react';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HideOnLandscape } from '~/components/OrientationView';
 import Video from '~/components/Video';
@@ -16,9 +17,19 @@ import {
 } from './styles';
 
 const VideoScreen: React.FC = () => {
-  type VideoScreenRouteProp = RouteProp<RootStackParamList, 'VIDEO'>;
-  const { params: selectedVideo } = useRoute<VideoScreenRouteProp>();
+  type Props = NativeStackScreenProps<RootStackParamList, 'VIDEO'>;
+  const { params: selectedVideo } = useRoute<Props['route']>();
+  const { setOptions } = useNavigation<Props['navigation']>();
   const orientation = useOrientation();
+
+  useLayoutEffect(() => {
+    setOptions({
+      headerShown: orientation === 'PORTRAIT',
+      gestureEnabled: orientation === 'PORTRAIT',
+      title: selectedVideo.className,
+    });
+  }, [orientation]);
+
   return (
     <Container>
       <WrapperVideo portrait={orientation === 'PORTRAIT'}>

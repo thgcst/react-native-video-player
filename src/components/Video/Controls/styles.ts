@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { MotiView } from 'moti';
 
 import RewindIcon from '~/assets/icons/player/rewind.svg';
@@ -18,7 +18,7 @@ export const Clickable = styled.TouchableOpacity.attrs({ activeOpacity: 1 })`
   align-items: center;
 `;
 
-export const Container = styled(MotiView)`
+export const Container = styled(MotiView)<{ portrait: boolean }>`
   flex: 1;
   width: 100%;
 
@@ -26,6 +26,12 @@ export const Container = styled(MotiView)`
   align-items: center;
 
   background-color: rgba(0, 0, 0, 0.8);
+
+  ${({ portrait, theme }) =>
+    !portrait &&
+    css`
+      padding: 0 ${theme.metrics.notchHeight}px;
+    `}
 `;
 
 export const WrapperCenterButtons = styled.View`

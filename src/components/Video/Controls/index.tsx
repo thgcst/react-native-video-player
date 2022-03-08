@@ -122,7 +122,8 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
               transition={{
                 type: 'timing',
                 duration: 200,
-              }}>
+              }}
+              portrait={orientation === 'PORTRAIT'}>
               <WrapperHeader>
                 <ClickableIcon
                   disabled={audioOnly}

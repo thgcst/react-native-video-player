@@ -17,9 +17,24 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Routes: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="HOME" component={Home} />
-        <Stack.Screen name="VIDEO" component={Video} />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: '#282a35' },
+          headerTintColor: '#e0bf5a',
+          headerTitleStyle: {
+            color: 'rgb(220, 220, 220)',
+          },
+        }}>
+        <Stack.Screen
+          name="HOME"
+          component={Home}
+          options={{ title: 'Home' }}
+        />
+        <Stack.Screen
+          name="VIDEO"
+          component={Video}
+          options={{ title: 'Video' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

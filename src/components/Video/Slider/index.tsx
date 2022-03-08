@@ -1,4 +1,9 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+} from 'react';
 
 import {
   useSharedValue,
@@ -7,6 +12,8 @@ import {
   useAnimatedGestureHandler,
   useDerivedValue,
   runOnJS,
+  interpolate,
+  withTiming,
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
@@ -38,6 +45,7 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const seekingPosition = useSharedValue(value / maxValue || 0);
+  const isSeekingAnimation = useSharedValue(0);
   const currentPosition = useDerivedValue(() => {
     return value / maxValue || 0;
   }, [value]);
@@ -85,7 +93,7 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
         Math.max(0, ctx.startX + event.translationX / wrapperWidth),
       );
     },
-    onEnd: _ => {
+    onEnd: () => {
       runOnJS(finishSeeking)();
     },
   });
@@ -93,6 +101,14 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
   const thumbStyle = useAnimatedStyle(() => {
     return {
       left: `${actualPosition.value * 100}%`,
+      opacity: interpolate(isSeekingAnimation.value, [0, 1], [1, 0.5]),
+      width: interpolate(isSeekingAnimation.value, [0, 1], [10, 20]),
+      height: interpolate(isSeekingAnimation.value, [0, 1], [10, 20]),
+      transform: [
+        {
+          translateX: interpolate(isSeekingAnimation.value, [0, 1], [-5, -10]),
+        },
+      ],
     };
   });
 
@@ -111,6 +127,13 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
   useImperativeHandle(ref, () => ({
     setIsSeeking,
   }));
+
+  useEffect(() => {
+    isSeekingAnimation.value = withSpring(Number(isSeeking), {
+      mass: 0.5,
+      damping: 20,
+    });
+  }, [isSeeking]);
 
   return (
     <>
