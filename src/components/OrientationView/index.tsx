@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
-
-import { useOrientation } from '../Video/hooks/useOrientation';
+import React, { useState } from 'react';
+import { useOrientationChange } from 'react-native-orientation-locker';
 
 export const HideOnLandscape: React.FC = ({ children }) => {
-  const orientation = useOrientation();
+  const [orientation, setOrientation] = useState('PORTRAIT');
+  useOrientationChange(setOrientation);
 
   if (orientation === 'PORTRAIT') {
     return <>{children}</>;
@@ -13,7 +13,8 @@ export const HideOnLandscape: React.FC = ({ children }) => {
 };
 
 export const HideOnPortrait: React.FC = ({ children }) => {
-  const orientation = useOrientation();
+  const [orientation, setOrientation] = useState('PORTRAIT');
+  useOrientationChange(setOrientation);
 
   if (orientation === 'PORTRAIT') {
     return <></>;

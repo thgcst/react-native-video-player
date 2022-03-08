@@ -1,7 +1,9 @@
-import React, { ElementRef, useEffect, useRef, useState } from 'react';
+import React, { ElementRef, useRef, useState } from 'react';
 import Video, { VideoProperties } from 'react-native-video';
 import { StatusBar, Switch } from 'react-native';
-import Orientation from 'react-native-orientation';
+import Orientation, {
+  useOrientationChange,
+} from 'react-native-orientation-locker';
 import {
   hideNavigationBar,
   showNavigationBar,
@@ -21,7 +23,6 @@ import LoadingIndicator from './LoadingIndicator';
 import { HideOnLandscape } from '../OrientationView';
 
 import { Container, WrapperSwitch, SwitchText } from './styles';
-import { useOrientation } from './hooks/useOrientation';
 import { useMusicControl } from './hooks/useMusicControl';
 
 interface IVideoComponent {
@@ -57,8 +58,6 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const videoRef = useRef<Video>(null);
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
-  const orientation = useOrientation();
-
   const { setNowPlaying } = useMusicControl({
     isPlaying,
     playVideo: () => setIsPlaying(true),
@@ -79,13 +78,15 @@ const VideoComponent: React.FC<IVideoComponent> = ({
     }
   };
 
-  useEffect(() => {
-    if (orientation === 'PORTRAIT') {
+  useOrientationChange(o => {
+    if (o === 'PORTRAIT') {
+      StatusBar.setHidden(false);
       showNavigationBar();
     } else {
+      StatusBar.setHidden(true);
       hideNavigationBar();
     }
-  }, [orientation]);
+  });
 
   return (
     <VideoContext.Provider
@@ -98,7 +99,6 @@ const VideoComponent: React.FC<IVideoComponent> = ({
         selectedSubtitle,
       }}>
       <Container>
-        <StatusBar hidden={orientation !== 'PORTRAIT'} />
         <Video
           source={audioOnly ? audioSource : source}
           ref={videoRef}

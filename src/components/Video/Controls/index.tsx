@@ -8,7 +8,10 @@ import React, {
   useEffect,
 } from 'react';
 import { AnimatePresence } from 'moti';
-import Orientation from 'react-native-orientation';
+import Orientation, {
+  useDeviceOrientationChange,
+  useOrientationChange,
+} from 'react-native-orientation-locker';
 
 import {
   Clickable,
@@ -30,7 +33,6 @@ import {
 import Slider from '../Slider';
 import VideoContext from '../VideoContext';
 import SubtitlesMenu from '../SubtitlesMenu';
-import { useOrientation } from '../hooks/useOrientation';
 
 interface IControls {
   onPlay: () => void;
@@ -65,7 +67,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
-  const orientation = useOrientation();
+  const [orientation, setOrientation] = useState('PORTRAIT');
 
   const setControlTimeout = () => {
     controlTimeout.current = setTimeout(() => {
@@ -98,8 +100,13 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
     } else {
       Orientation.lockToPortrait();
     }
-    Orientation.unlockAllOrientations();
   };
+
+  useDeviceOrientationChange(() => {
+    Orientation.unlockAllOrientations();
+  });
+
+  useOrientationChange(setOrientation);
 
   return (
     <>

@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import { OrientationLocker, PORTRAIT } from 'react-native-orientation-locker';
 
 import store, { persistor } from './store';
 import theme from './theme';
@@ -30,6 +31,7 @@ const App: React.FC = () => {
       <PersistGate persistor={persistor}>
         <ThemeProvider theme={theme}>
           <StatusBar backgroundColor="#282a35" barStyle="light-content" />
+          <OrientationLocker orientation={PORTRAIT} />
           <Routes />
         </ThemeProvider>
       </PersistGate>
