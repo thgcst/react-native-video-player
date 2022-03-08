@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { OnLoadData, OnProgressData } from 'react-native-video';
 
-export const _isPlaying = true as boolean;
+export const _isPlaying = false as boolean;
 export const _isLoading = false as boolean;
 export const _audioOnly = false as boolean;
 export const _progress: OnProgressData = {

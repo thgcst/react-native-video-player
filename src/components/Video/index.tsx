@@ -1,7 +1,11 @@
-import React, { ElementRef, useRef, useState } from 'react';
+import React, { ElementRef, useEffect, useRef, useState } from 'react';
 import Video, { VideoProperties } from 'react-native-video';
-import { Switch } from 'react-native';
+import { StatusBar, Switch } from 'react-native';
 import Orientation from 'react-native-orientation';
+import {
+  hideNavigationBar,
+  showNavigationBar,
+} from 'react-native-navigation-bar-color';
 
 import Controls from './Controls';
 import VideoContext, {
@@ -17,19 +21,29 @@ import LoadingIndicator from './LoadingIndicator';
 import { HideOnLandscape } from '../OrientationView';
 
 import { Container, WrapperSwitch, SwitchText } from './styles';
+import { useOrientation } from './hooks/useOrientation';
+import { useMusicControl } from './hooks/useMusicControl';
 
 interface IVideoComponent {
   source: VideoProperties['source'];
   audioSource: VideoProperties['source'];
   thumbnail: VideoProperties['poster'];
+  title: string;
+  artist: string;
+  playOnMount?: boolean;
+  startAt?: number;
 }
 
 const VideoComponent: React.FC<IVideoComponent> = ({
   source,
   audioSource,
   thumbnail,
+  title,
+  artist,
+  playOnMount = false,
+  startAt,
 }) => {
-  const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(_isPlaying);
+  const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(playOnMount);
   const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
   const [audioOnly, setAudioOnly] = useState<typeof _audioOnly>(_audioOnly);
   const [progress, setProgress] = useState<typeof _progress>(_progress);
@@ -43,6 +57,16 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const videoRef = useRef<Video>(null);
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
+  const orientation = useOrientation();
+
+  const { setNowPlaying } = useMusicControl({
+    isPlaying,
+    playVideo: () => setIsPlaying(true),
+    pauseVideo: () => setIsPlaying(false),
+    seek: pos => videoRef.current?.seek(pos),
+    currentTime: progress.currentTime,
+  });
+
   const toggleAudioOnly = () => {
     setPreviousCurrentTime(progress.currentTime);
 
@@ -55,6 +79,14 @@ const VideoComponent: React.FC<IVideoComponent> = ({
     }
   };
 
+  useEffect(() => {
+    if (orientation === 'PORTRAIT') {
+      showNavigationBar();
+    } else {
+      hideNavigationBar();
+    }
+  }, [orientation]);
+
   return (
     <VideoContext.Provider
       value={{
@@ -66,6 +98,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
         selectedSubtitle,
       }}>
       <Container>
+        <StatusBar hidden={orientation !== 'PORTRAIT'} />
         <Video
           source={audioOnly ? audioSource : source}
           ref={videoRef}
@@ -87,6 +120,15 @@ const VideoComponent: React.FC<IVideoComponent> = ({
           paused={!isPlaying}
           onLoadStart={() => setIsLoading(true)}
           onLoad={e => {
+            if (startAt) {
+              videoRef.current?.seek(startAt);
+            }
+            setNowPlaying({
+              title,
+              thumbnail,
+              artist,
+              duration: e.duration,
+            });
             setIsLoading(false);
             setSubtitles(e.textTracks);
             setProgress({
