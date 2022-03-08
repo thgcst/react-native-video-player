@@ -108,7 +108,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             height: '100%',
             backgroundColor: 'black',
           }}
-          pictureInPicture
+          pictureInPicture={false}
           ignoreSilentSwitch="ignore"
           allowsExternalPlayback
           playInBackground
