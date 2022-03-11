@@ -23,7 +23,6 @@ import {
   Pause,
   Rewind,
   FastForward,
-  HiddenPlayPauseButton,
   WrapperHeader,
   WrapperFooter,
   ClickableIcon,
@@ -193,19 +192,6 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
             </Container>
           )}
         </AnimatePresence>
-        {!isControlsVisible && (
-          <HiddenPlayPauseButton
-            onPress={() => {
-              resetControlTimeout();
-              if (isPlaying) {
-                onPause();
-              } else {
-                onPlay();
-              }
-              setIsControlsVisible(true);
-            }}
-          />
-        )}
       </Clickable>
       <SubtitlesMenu
         isVisible={isSubtitleVisible}

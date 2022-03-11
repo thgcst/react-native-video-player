@@ -65,12 +65,6 @@ export const FastForward = styled(RewindIcon)`
   transform: rotate(180deg);
 `;
 
-export const HiddenPlayPauseButton = styled.TouchableOpacity`
-  width: 60px;
-  height: 60px;
-  position: absolute;
-`;
-
 export const WrapperHeader = styled.View.attrs({
   activeOpacity: 1,
 })`

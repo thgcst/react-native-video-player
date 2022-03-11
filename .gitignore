@@ -58,3 +58,5 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+src/screens/Home/data.ts
