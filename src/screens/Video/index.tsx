@@ -1,15 +1,12 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import {
-  OrientationLocker,
-  useOrientationChange,
-  UNLOCK,
-} from 'react-native-orientation-locker';
+import { OrientationLocker, UNLOCK } from 'react-native-orientation-locker';
 
 import { HideOnLandscape } from '~/components/OrientationView';
 import Video from '~/components/Video';
 import { RootStackParamList } from '~/navigation';
+import useOrientation from '~/hooks/useOrientation';
 
 import {
   Container,
@@ -24,23 +21,20 @@ const VideoScreen: React.FC = () => {
   type Props = NativeStackScreenProps<RootStackParamList, 'VIDEO'>;
   const { params: selectedVideo } = useRoute<Props['route']>();
   const { setOptions } = useNavigation<Props['navigation']>();
-  const [orientation, setOrientation] = useState('PORTRAIT');
+  const orientation = useOrientation();
 
   useLayoutEffect(() => {
     setOptions({
-      headerShown: orientation === 'PORTRAIT' || orientation === 'UNKNOWN',
-      gestureEnabled: orientation === 'PORTRAIT' || orientation === 'UNKNOWN',
+      headerShown: orientation === 'PORTRAIT',
+      gestureEnabled: orientation === 'PORTRAIT',
       title: selectedVideo.className,
     });
   }, [orientation]);
 
-  useOrientationChange(setOrientation);
-
   return (
     <Container>
       <OrientationLocker orientation={UNLOCK} />
-      <WrapperVideo
-        portrait={orientation === 'PORTRAIT' || orientation === 'UNKNOWN'}>
+      <WrapperVideo portrait={orientation === 'PORTRAIT'}>
         <Video
           source={{ uri: selectedVideo.medias.url_hls }}
           audioSource={{ uri: selectedVideo.medias.url_audio }}

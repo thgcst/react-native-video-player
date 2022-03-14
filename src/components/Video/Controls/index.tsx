@@ -10,7 +10,6 @@ import React, {
 import { AnimatePresence } from 'moti';
 import Orientation, {
   useDeviceOrientationChange,
-  useOrientationChange,
 } from 'react-native-orientation-locker';
 
 import {
@@ -32,6 +31,7 @@ import {
 import Slider from '../Slider';
 import VideoContext from '../VideoContext';
 import SubtitlesMenu from '../SubtitlesMenu';
+import useOrientation from '~/hooks/useOrientation';
 
 interface IControls {
   onPlay: () => void;
@@ -56,7 +56,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   { onPlay, onPause, seekTo, setSelectedSubtitle },
   ref,
 ) => {
-  const TIME_TO_AUTO_HIDE = 5 * 1000; // 5 sec
+  const TIME_TO_AUTO_HIDE = 10 * 1000; // 10 seconds
   const {
     isPlaying,
     progress: { currentTime, playableDuration, seekableDuration },
@@ -66,7 +66,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
-  const [orientation, setOrientation] = useState('PORTRAIT');
+  const orientation = useOrientation();
 
   const setControlTimeout = () => {
     controlTimeout.current = setTimeout(() => {
@@ -94,7 +94,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   }));
 
   const toggleFullScreen = () => {
-    if (orientation === 'PORTRAIT' || orientation === 'UNKNOWN') {
+    if (orientation === 'PORTRAIT') {
       Orientation.lockToLandscape();
     } else {
       Orientation.lockToPortrait();
@@ -104,8 +104,6 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   useDeviceOrientationChange(() => {
     Orientation.unlockAllOrientations();
   });
-
-  useOrientationChange(setOrientation);
 
   return (
     <>
@@ -129,9 +127,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                 type: 'timing',
                 duration: 200,
               }}
-              portrait={
-                orientation === 'PORTRAIT' || orientation === 'UNKNOWN'
-              }>
+              portrait={orientation === 'PORTRAIT'}>
               <WrapperHeader>
                 <ClickableIcon
                   disabled={audioOnly}
