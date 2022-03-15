@@ -15,6 +15,7 @@ import VideoContext, {
   _progress,
   _subtitles,
   _selectedSubtitle,
+  _videoRate,
 } from './VideoContext';
 import LoadingIndicator from './LoadingIndicator';
 
@@ -53,6 +54,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const [subtitles, setSubtitles] = useState<typeof _subtitles>(_subtitles);
   const [selectedSubtitle, setSelectedSubtitle] =
     useState<typeof _selectedSubtitle>(_selectedSubtitle);
+  const [videoRate, setVideoRate] = useState<typeof _videoRate>(_videoRate);
 
   const videoRef = useRef<Video>(null);
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
@@ -98,6 +100,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
         progress,
         subtitles,
         selectedSubtitle,
+        videoRate,
       }}>
       <Container>
         <Video
@@ -154,6 +157,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             setProgress(e);
           }}
           progressUpdateInterval={1000}
+          rate={videoRate}
         />
         {isLoading ? (
           <LoadingIndicator />
@@ -164,6 +168,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             setSelectedSubtitle={setSelectedSubtitle}
+            setVideoRate={setVideoRate}
           />
         )}
       </Container>

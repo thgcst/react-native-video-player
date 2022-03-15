@@ -12,6 +12,13 @@ import Orientation, {
   useDeviceOrientationChange,
 } from 'react-native-orientation-locker';
 
+import useOrientation from '~/hooks/useOrientation';
+
+import Slider from '../Slider';
+import VideoContext from '../VideoContext';
+import SubtitlesMenu from '../SubtitlesMenu';
+import ConfigMenu from '../ConfigMenu';
+
 import {
   Clickable,
   Container,
@@ -27,11 +34,8 @@ import {
   ClickableIcon,
   FullScreen,
   Subtitles,
+  Config,
 } from './styles';
-import Slider from '../Slider';
-import VideoContext from '../VideoContext';
-import SubtitlesMenu from '../SubtitlesMenu';
-import useOrientation from '~/hooks/useOrientation';
 
 interface IControls {
   onPlay: () => void;
@@ -46,6 +50,7 @@ interface IControls {
       | undefined
     >
   >;
+  setVideoRate: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface ControlsRef {
@@ -53,7 +58,7 @@ export interface ControlsRef {
 }
 
 const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
-  { onPlay, onPause, seekTo, setSelectedSubtitle },
+  { onPlay, onPause, seekTo, setSelectedSubtitle, setVideoRate },
   ref,
 ) => {
   const TIME_TO_AUTO_HIDE = 10 * 1000; // 10 seconds
@@ -64,6 +69,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
   } = useContext(VideoContext);
   const [isControlsVisible, setIsControlsVisible] = useState(false);
   const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
+  const [isConfigVisible, setIsConfigVisible] = useState(false);
   const controlTimeout = useRef<NodeJS.Timeout | null>(null);
   const sliderRef = useRef<ElementRef<typeof Slider>>(null);
   const orientation = useOrientation();
@@ -134,6 +140,9 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                   onPress={() => setIsSubtitleVisible(true)}>
                   {!audioOnly && <Subtitles />}
                 </ClickableIcon>
+                <ClickableIcon onPress={() => setIsConfigVisible(true)}>
+                  <Config />
+                </ClickableIcon>
               </WrapperHeader>
               <WrapperCenterButtons>
                 <ControlButton
@@ -193,9 +202,17 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
         isVisible={isSubtitleVisible}
         setSelectedSubtitle={e => {
           setSelectedSubtitle(e);
-          setIsSubtitleVisible(false);
+          setTimeout(() => setIsSubtitleVisible(false), 100);
         }}
         closeMenu={() => setIsSubtitleVisible(false)}
+      />
+      <ConfigMenu
+        isVisible={isConfigVisible}
+        setVideoRate={e => {
+          setVideoRate(e);
+          setTimeout(() => setIsConfigVisible(false), 100);
+        }}
+        closeMenu={() => setIsConfigVisible(false)}
       />
     </>
   );

@@ -6,6 +6,7 @@ import PauseIcon from '~/assets/icons/player/pause.svg';
 import PlayIcon from '~/assets/icons/player/play.svg';
 import FullScreenIcon from '~/assets/icons/player/fullscreen.svg';
 import SubtitlesIcon from '~/assets/icons/player/subtitles.svg';
+import ConfigIcon from '~/assets/icons/player/settings.svg';
 
 export const Clickable = styled.TouchableOpacity.attrs({ activeOpacity: 1 })`
   position: absolute;
@@ -96,3 +97,5 @@ export const FullScreen = styled(FullScreenIcon)<{ isFullscreen: boolean }>`
 `;
 
 export const Subtitles = styled(SubtitlesIcon)``;
+
+export const Config = styled(ConfigIcon)``;

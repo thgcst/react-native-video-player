@@ -17,6 +17,8 @@ export const _selectedSubtitle = undefined as
     }
   | undefined;
 
+export const _videoRate = 1 as number;
+
 interface IInitialValue {
   isPlaying: typeof _isPlaying;
   isLoading: typeof _isLoading;
@@ -24,6 +26,7 @@ interface IInitialValue {
   progress: typeof _progress;
   subtitles: typeof _subtitles;
   selectedSubtitle: typeof _selectedSubtitle;
+  videoRate: typeof _videoRate;
 }
 
 const initialValue: IInitialValue = {
@@ -33,6 +36,7 @@ const initialValue: IInitialValue = {
   progress: _progress,
   subtitles: _subtitles,
   selectedSubtitle: _selectedSubtitle,
+  videoRate: _videoRate,
 };
 
 const VideoContext = createContext(initialValue);
