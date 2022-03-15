@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import auth from './auth';
+import courses from './courses';
 
 const createRootReducer = combineReducers({
-  auth,
+  courses,
 });
 
 export default createRootReducer;

@@ -1,7 +1,7 @@
 import { all } from 'redux-saga/effects';
 
-import auth from './auth';
+import courses from './courses';
 
-export default function* rootSaga() {
-  return yield all([auth]);
+export default function* rootSaga(): any {
+  return yield all([courses]);
 }
