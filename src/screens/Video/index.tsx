@@ -19,7 +19,8 @@ import {
 
 const VideoScreen: React.FC = () => {
   type Props = NativeStackScreenProps<RootStackParamList, 'VIDEO'>;
-  const { params: selectedVideo } = useRoute<Props['route']>();
+  const { params: lesson } = useRoute<Props['route']>();
+  const [selectedVideo, setSelectedVideo] = useState(lesson.portions[0]);
   const { setOptions } = useNavigation<Props['navigation']>();
   const orientation = useOrientation();
 
@@ -27,7 +28,7 @@ const VideoScreen: React.FC = () => {
     setOptions({
       headerShown: orientation === 'PORTRAIT',
       gestureEnabled: orientation === 'PORTRAIT',
-      title: selectedVideo.className,
+      title: lesson.description,
     });
   }, [orientation]);
 
@@ -39,7 +40,7 @@ const VideoScreen: React.FC = () => {
           source={{ uri: selectedVideo.medias.url_hls }}
           audioSource={{ uri: selectedVideo.medias.url_audio }}
           thumbnail={selectedVideo.thumbnail}
-          title={`${selectedVideo.className} - ${selectedVideo.description}`}
+          title={`${selectedVideo.description} - ${selectedVideo.teacher}`}
           artist={selectedVideo.teacher}
           playOnMount
           startAt={selectedVideo.watchedSeconds}
@@ -48,9 +49,14 @@ const VideoScreen: React.FC = () => {
       <HideOnLandscape>
         <WrapperContent>
           <List>
-            {['Parte 1', 'Parte 2', 'Parte 3'].map((item, index) => (
-              <WrapperText first={index === 0} key={item}>
-                <Text selected={index === 0}>{item}</Text>
+            {lesson.portions.map((item, index) => (
+              <WrapperText
+                first={index === 0}
+                key={item.id}
+                onPress={() => setSelectedVideo(item)}>
+                <Text selected={selectedVideo.id === item.id}>
+                  {item.description}
+                </Text>
               </WrapperText>
             ))}
           </List>
