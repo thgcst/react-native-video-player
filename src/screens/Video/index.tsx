@@ -16,12 +16,15 @@ import {
   List,
   WrapperText,
   Text,
+  Emoji,
 } from './styles';
 
 const VideoScreen: React.FC = () => {
   type Props = NativeStackScreenProps<RootStackParamList, 'VIDEO'>;
   const { params: lesson } = useRoute<Props['route']>();
-  const [selectedVideo, setSelectedVideo] = useState(lesson.portions[0]);
+  const [selectedVideo, setSelectedVideo] = useState(
+    lesson.portions.find(item => !item.watched) || lesson.portions[0],
+  );
   const { setOptions } = useNavigation<Props['navigation']>();
   const orientation = useOrientation();
 
@@ -58,6 +61,7 @@ const VideoScreen: React.FC = () => {
                 <Text selected={selectedVideo.id === item.id}>
                   {item.description}
                 </Text>
+                {item.watched && <Emoji>✔︎</Emoji>}
               </WrapperText>
             ))}
           </List>
