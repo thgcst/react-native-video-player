@@ -1,13 +1,18 @@
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
-import Video, { VideoProperties } from 'react-native-video';
 import { StatusBar, Switch } from 'react-native';
-import Orientation from 'react-native-orientation-locker';
+
 import {
   hideNavigationBar,
   showNavigationBar,
 } from 'react-native-navigation-bar-color';
+import Orientation from 'react-native-orientation-locker';
+import Video, { VideoProperties } from 'react-native-video';
+
+import useOrientation from '~/hooks/useOrientation';
 
 import Controls from './Controls';
+import { useMusicControl } from './hooks/useMusicControl';
+import LoadingIndicator from './LoadingIndicator';
 import VideoContext, {
   _isPlaying,
   _isLoading,
@@ -17,13 +22,10 @@ import VideoContext, {
   _selectedSubtitle,
   _videoRate,
 } from './VideoContext';
-import LoadingIndicator from './LoadingIndicator';
 
 import { HideOnLandscape } from '../OrientationView';
 
 import { Container, WrapperSwitch, SwitchText } from './styles';
-import { useMusicControl } from './hooks/useMusicControl';
-import useOrientation from '~/hooks/useOrientation';
 
 interface IVideoComponent {
   source: VideoProperties['source'];

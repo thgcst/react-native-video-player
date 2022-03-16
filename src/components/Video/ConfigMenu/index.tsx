@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
+
 import Modal from 'react-native-modal';
+
 import useOrientation from '~/hooks/useOrientation';
+
 import VideoContext from '../VideoContext';
 
 import {

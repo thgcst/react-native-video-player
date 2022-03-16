@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   OrientationType,
   useOrientationChange,
@@ -20,7 +21,6 @@ function useOrientation() {
       case 'LANDSCAPE-RIGHT':
         setOrientation('LANDSCAPE');
         break;
-
       default:
         break;
     }

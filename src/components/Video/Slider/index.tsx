@@ -5,6 +5,7 @@ import React, {
   useEffect,
 } from 'react';
 
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import {
   useSharedValue,
   withSpring,
@@ -13,9 +14,7 @@ import {
   useDerivedValue,
   runOnJS,
   interpolate,
-  withTiming,
 } from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
 
 import {
   Container,

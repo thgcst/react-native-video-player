@@ -1,4 +1,5 @@
 import { action } from 'typesafe-actions';
+
 import { AuthTypes, User } from './types';
 
 const signInRequest = () => action(AuthTypes.SIGN_IN_REQUEST);

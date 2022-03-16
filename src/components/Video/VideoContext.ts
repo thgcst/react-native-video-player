@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+
 import { OnLoadData, OnProgressData } from 'react-native-video';
 
 export const _isPlaying = false as boolean;

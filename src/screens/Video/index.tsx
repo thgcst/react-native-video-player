@@ -1,12 +1,13 @@
 import React, { useLayoutEffect, useState } from 'react';
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { OrientationLocker, UNLOCK } from 'react-native-orientation-locker';
 
 import { HideOnLandscape } from '~/components/OrientationView';
 import Video from '~/components/Video';
-import { RootStackParamList } from '~/navigation';
 import useOrientation from '~/hooks/useOrientation';
+import { RootStackParamList } from '~/navigation';
 
 import {
   Container,

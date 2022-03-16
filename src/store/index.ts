@@ -1,8 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import createSagaMiddleware from 'redux-saga';
 import { persistStore, persistReducer } from 'redux-persist';
+import createSagaMiddleware from 'redux-saga';
 
 import Reactotron from '~/config/ReactotronConfig';
+
 import rootReducer from './ducks/rootReducer';
 import rootSaga from './ducks/rootSaga';
 import persistConfig from './persistConfig';

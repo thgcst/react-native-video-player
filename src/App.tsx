@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { LogBox, StatusBar } from 'react-native';
-import { ThemeProvider } from 'styled-components';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
+
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import { OrientationLocker, PORTRAIT } from 'react-native-orientation-locker';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from 'styled-components';
 
+import Routes from './navigation';
 import store, { persistor } from './store';
 import theme from './theme';
-import Routes from './navigation';
 
 if (__DEV__) {
   import('./config/ReactotronConfig').then(() =>

@@ -3,9 +3,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Video from '~/screens/Video';
 import Home from '~/screens/Home';
 import data from '~/screens/Home/data';
+import Video from '~/screens/Video';
 
 export type RootStackParamList = {
   HOME: undefined;

@@ -7,6 +7,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
+
 import { AnimatePresence } from 'moti';
 import Orientation, {
   useDeviceOrientationChange,
@@ -14,10 +15,10 @@ import Orientation, {
 
 import useOrientation from '~/hooks/useOrientation';
 
-import Slider from '../Slider';
-import VideoContext from '../VideoContext';
-import SubtitlesMenu from '../SubtitlesMenu';
 import ConfigMenu from '../ConfigMenu';
+import Slider from '../Slider';
+import SubtitlesMenu from '../SubtitlesMenu';
+import VideoContext from '../VideoContext';
 
 import {
   Clickable,

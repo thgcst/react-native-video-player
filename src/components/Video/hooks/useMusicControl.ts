@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import MusicControl, { Command } from 'react-native-music-control';
 import { Platform } from 'react-native';
+
+import MusicControl, { Command } from 'react-native-music-control';
 
 interface UseMusicControlProps {
   isPlaying: boolean;

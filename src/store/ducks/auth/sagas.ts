@@ -1,8 +1,9 @@
 import { call, put, all, takeLatest } from 'redux-saga/effects';
-import api from '../../../services/api';
 
 import AuthActions from './actions';
 import { AuthTypes } from './types';
+
+import api from '../../../services/api';
 
 function* signIn() {
   try {

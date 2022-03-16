@@ -1,9 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { NativeModules } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Reactotron from 'reactotron-react-native';
 import { reactotronRedux } from 'reactotron-redux';
 import reactotronSaga from 'reactotron-redux-saga';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NativeModules } from 'react-native';
 
 declare global {
   interface Console {
