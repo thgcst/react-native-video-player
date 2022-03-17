@@ -66,15 +66,19 @@ export const FastForward = styled(RewindIcon)`
   transform: rotate(180deg);
 `;
 
-export const WrapperHeader = styled.View.attrs({
-  activeOpacity: 1,
-})`
+export const WrapperHeader = styled.View`
   flex: 1;
   width: 100%;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
   padding: 0 16px;
+`;
+
+export const HeaderRight = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 export const WrapperFooter = styled.TouchableOpacity.attrs({
@@ -98,4 +102,6 @@ export const FullScreen = styled(FullScreenIcon)<{ isFullscreen: boolean }>`
 
 export const Subtitles = styled(SubtitlesIcon)``;
 
-export const Config = styled(ConfigIcon)``;
+export const Config = styled(ConfigIcon)`
+  margin-left: 24px;
+`;

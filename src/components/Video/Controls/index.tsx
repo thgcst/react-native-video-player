@@ -32,10 +32,12 @@ import {
   Rewind,
   FastForward,
   WrapperHeader,
+  HeaderRight,
   WrapperFooter,
   ClickableIcon,
   FullScreen,
   Subtitles,
+  Config,
 } from './styles';
 
 interface IControls {
@@ -141,10 +143,12 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                   onPress={() => setIsSubtitleVisible(true)}>
                   {!audioOnly && <Subtitles />}
                 </ClickableIcon>
-                <ChromeCastButton />
-                {/* <ClickableIcon onPress={() => setIsConfigVisible(true)}>
-                  <Config />
-                </ClickableIcon> */}
+                <HeaderRight>
+                  <ChromeCastButton />
+                  <ClickableIcon onPress={() => setIsConfigVisible(true)}>
+                    <Config />
+                  </ClickableIcon>
+                </HeaderRight>
               </WrapperHeader>
               <WrapperCenterButtons>
                 <ControlButton
