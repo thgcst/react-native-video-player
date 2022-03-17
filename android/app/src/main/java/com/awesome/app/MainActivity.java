@@ -4,6 +4,8 @@ import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import androidx.annotation.Nullable;
+import com.google.android.gms.cast.framework.CastContext;
 
 public class MainActivity extends ReactActivity {
 
@@ -17,8 +19,10 @@ public class MainActivity extends ReactActivity {
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(null);
+
+    CastContext.getSharedInstance(this);
   }
 
   @Override

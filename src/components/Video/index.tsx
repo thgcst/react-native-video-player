@@ -102,6 +102,11 @@ const VideoComponent: React.FC<IVideoComponent> = ({
         progress,
         subtitles,
         selectedSubtitle,
+        source,
+        audioSource,
+        thumbnail,
+        title,
+        artist,
         videoRate,
       }}>
       <Container>
