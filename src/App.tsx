@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LogBox, StatusBar } from 'react-native';
+import { LogBox, StatusBar, useWindowDimensions } from 'react-native';
 
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
@@ -27,10 +27,12 @@ const App: React.FC = () => {
     changeNavigationBarColor('#282a35', true, false);
   }, []);
 
+  const { height, width } = useWindowDimensions();
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme({ height, width })}>
           <StatusBar backgroundColor="#282a35" barStyle="light-content" />
           <OrientationLocker orientation={PORTRAIT} />
           <Routes />

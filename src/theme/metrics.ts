@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
 import {
   getStatusBarHeight,
@@ -6,9 +6,12 @@ import {
   isIphoneX,
 } from 'react-native-iphone-x-helper';
 
-const { width, height } = Dimensions.get('window');
+type Props = {
+  width: number;
+  height: number;
+};
 
-const Metrics = {
+const Metrics = ({ width, height }: Props) => ({
   headerPadding: Platform.OS === 'ios' ? 20 : 0,
   basePadding: 30,
   baseMargin: 30,
@@ -18,6 +21,6 @@ const Metrics = {
   notchHeight: isIphoneX() ? getStatusBarHeight() : 0,
   marginBottom: getBottomSpace() / 2,
   isIphoneX: isIphoneX(),
-};
+});
 
 export default Metrics;

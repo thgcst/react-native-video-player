@@ -30,13 +30,23 @@ export const PlayedBar = styled(Animated.View)`
   left: 0;
 `;
 
+export const ThumbWrapper = styled(Animated.View)`
+  width: 24px;
+  height: 24px;
+  border-radius: 25px;
+  z-index: 2;
+  position: absolute;
+  transform: translateX(-12px);
+
+  justify-content: center;
+  align-items: center;
+`;
+
 export const Thumb = styled(Animated.View)`
   width: 10px;
   height: 10px;
   border-radius: 10px;
   background-color: #e0bf5a;
-  z-index: 2;
-  position: absolute;
 `;
 
 export const CurrentTime = styled(ReText)`
