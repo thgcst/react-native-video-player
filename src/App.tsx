@@ -24,7 +24,7 @@ LogBox.ignoreLogs([
 
 const App: React.FC = () => {
   useEffect(() => {
-    changeNavigationBarColor('#282a35', true, false);
+    changeNavigationBarColor('#282a35', false, false);
   }, []);
 
   const { height, width } = useWindowDimensions();

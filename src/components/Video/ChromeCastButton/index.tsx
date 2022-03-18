@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button } from 'react-native';
 
 import GoogleCast, {
@@ -16,33 +16,48 @@ const ChromeCastButton: React.FC = () => {
     thumbnail,
     title,
     progress: { currentTime, seekableDuration },
+    videoRate,
+    selectedSubtitle,
   } = useContext(VideoContext);
 
   const client = useRemoteMediaClient();
 
-  if (client) {
-    client.loadMedia({
-      mediaInfo: {
-        contentUrl: typeof source !== 'number' && source?.uri ? source.uri : '',
-        metadata: {
-          images: [
-            {
-              url: thumbnail || '',
-            },
-          ],
-          title,
-          type: 'generic',
+  const sessionManager = GoogleCast.getSessionManager();
+
+  useEffect(() => {
+    if (client) {
+      client.loadMedia({
+        mediaInfo: {
+          contentUrl:
+            typeof source !== 'number' && source?.uri ? source.uri : '',
+          metadata: {
+            images: [
+              {
+                url: thumbnail || '',
+              },
+            ],
+            title,
+            type: 'generic',
+            subtitle: selectedSubtitle?.value,
+          },
+          streamDuration: seekableDuration,
         },
-        streamDuration: seekableDuration,
-      },
-      startTime: currentTime,
-    });
-    GoogleCast.showExpandedControls();
-  }
+        playbackRate: videoRate,
+        startTime: currentTime,
+      });
+    }
+  }, [client]);
 
   return (
     <>
-      <Button title="Stream" onPress={GoogleCast.showCastDialog} />
+      <Button
+        title={client ? 'Stop' : 'Stream'}
+        onPress={() =>
+          client
+            ? sessionManager.endCurrentSession()
+            : GoogleCast.showCastDialog()
+        }
+      />
       <CastButton
         style={{
           width: 24,
