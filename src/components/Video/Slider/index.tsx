@@ -21,6 +21,7 @@ import {
   NotLoadedBar,
   LoadedBar,
   PlayedBar,
+  ThumbWrapper,
   Thumb,
   CurrentTime,
 } from './styles';
@@ -97,17 +98,17 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
     },
   });
 
-  const thumbStyle = useAnimatedStyle(() => {
+  const thumbWrapperStyle = useAnimatedStyle(() => {
     return {
       left: `${actualPosition.value * 100}%`,
+    };
+  });
+
+  const thumbStyle = useAnimatedStyle(() => {
+    return {
       opacity: interpolate(isSeekingAnimation.value, [0, 1], [1, 0.5]),
       width: interpolate(isSeekingAnimation.value, [0, 1], [10, 20]),
       height: interpolate(isSeekingAnimation.value, [0, 1], [10, 20]),
-      transform: [
-        {
-          translateX: interpolate(isSeekingAnimation.value, [0, 1], [-5, -10]),
-        },
-      ],
     };
   });
 
@@ -139,10 +140,9 @@ const Slider: React.ForwardRefRenderFunction<SliderRef, ISlider> = (
       <CurrentTime text={formatTime} />
       <Container collapsable={false}>
         <PanGestureHandler onGestureEvent={gestureHandler}>
-          <Thumb
-            hitSlop={{ top: 15, bottom: 15, right: 15, left: 15 }}
-            style={thumbStyle}
-          />
+          <ThumbWrapper style={thumbWrapperStyle}>
+            <Thumb style={thumbStyle} />
+          </ThumbWrapper>
         </PanGestureHandler>
         <NotLoadedBar
           onLayout={e => setWrapperWidth(e.nativeEvent.layout.width)}>

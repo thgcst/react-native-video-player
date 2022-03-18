@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useWindowDimensions } from 'react-native';
 
 import Modal from 'react-native-modal';
 
@@ -29,12 +30,18 @@ const ConfigMenu: React.FC<IConfigMenu> = ({
 }) => {
   const orientation = useOrientation();
   const { videoRate } = useContext(VideoContext);
+  const { height, width } = useWindowDimensions();
 
   return (
     <Modal
       isVisible={isVisible}
       backdropOpacity={0.8}
-      onBackdropPress={closeMenu}>
+      onBackdropPress={closeMenu}
+      coverScreen
+      useNativeDriverForBackdrop
+      deviceHeight={height}
+      statusBarTranslucent
+      deviceWidth={width}>
       <Container>
         <Title>Velocidade</Title>
         <WrapperOptions row={orientation === 'LANDSCAPE'}>
