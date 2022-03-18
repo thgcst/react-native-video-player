@@ -1,10 +1,11 @@
-import styled, { css } from 'styled-components/native';
 import { MotiView } from 'moti';
+import styled, { css } from 'styled-components/native';
 
-import RewindIcon from '~/assets/icons/player/rewind.svg';
+import FullScreenIcon from '~/assets/icons/player/fullscreen.svg';
 import PauseIcon from '~/assets/icons/player/pause.svg';
 import PlayIcon from '~/assets/icons/player/play.svg';
-import FullScreenIcon from '~/assets/icons/player/fullscreen.svg';
+import RewindIcon from '~/assets/icons/player/rewind.svg';
+import ConfigIcon from '~/assets/icons/player/settings.svg';
 import SubtitlesIcon from '~/assets/icons/player/subtitles.svg';
 
 export const Clickable = styled.TouchableOpacity.attrs({ activeOpacity: 1 })`
@@ -96,3 +97,5 @@ export const FullScreen = styled(FullScreenIcon)<{ isFullscreen: boolean }>`
 `;
 
 export const Subtitles = styled(SubtitlesIcon)``;
+
+export const Config = styled(ConfigIcon)``;

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import useOrientation from '~/hooks/useOrientation';
 
 export const HideOnLandscape: React.FC = ({ children }) => {

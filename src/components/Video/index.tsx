@@ -1,13 +1,18 @@
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
-import Video, { VideoProperties } from 'react-native-video';
 import { StatusBar, Switch } from 'react-native';
-import Orientation from 'react-native-orientation-locker';
+
 import {
   hideNavigationBar,
   showNavigationBar,
 } from 'react-native-navigation-bar-color';
+import Orientation from 'react-native-orientation-locker';
+import Video, { VideoProperties } from 'react-native-video';
+
+import useOrientation from '~/hooks/useOrientation';
 
 import Controls from './Controls';
+import { useMusicControl } from './hooks/useMusicControl';
+import LoadingIndicator from './LoadingIndicator';
 import VideoContext, {
   _isPlaying,
   _isLoading,
@@ -15,14 +20,12 @@ import VideoContext, {
   _progress,
   _subtitles,
   _selectedSubtitle,
+  _videoRate,
 } from './VideoContext';
-import LoadingIndicator from './LoadingIndicator';
 
 import { HideOnLandscape } from '../OrientationView';
 
 import { Container, WrapperSwitch, SwitchText } from './styles';
-import { useMusicControl } from './hooks/useMusicControl';
-import useOrientation from '~/hooks/useOrientation';
 
 interface IVideoComponent {
   source: VideoProperties['source'];
@@ -53,6 +56,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const [subtitles, setSubtitles] = useState<typeof _subtitles>(_subtitles);
   const [selectedSubtitle, setSelectedSubtitle] =
     useState<typeof _selectedSubtitle>(_selectedSubtitle);
+  const [videoRate, setVideoRate] = useState<typeof _videoRate>(_videoRate);
 
   const videoRef = useRef<Video>(null);
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
@@ -98,6 +102,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
         progress,
         subtitles,
         selectedSubtitle,
+        videoRate,
       }}>
       <Container>
         <Video
@@ -154,6 +159,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             setProgress(e);
           }}
           progressUpdateInterval={1000}
+          rate={videoRate}
         />
         {isLoading ? (
           <LoadingIndicator />
@@ -164,6 +170,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             setSelectedSubtitle={setSelectedSubtitle}
+            setVideoRate={setVideoRate}
           />
         )}
       </Container>
