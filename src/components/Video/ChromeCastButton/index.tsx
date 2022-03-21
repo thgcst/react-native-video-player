@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 
 import React, { useContext, useEffect } from 'react';
-import { Button } from 'react-native';
 
 import GoogleCast, {
   CastButton,
@@ -9,6 +8,8 @@ import GoogleCast, {
 } from 'react-native-google-cast';
 
 import VideoContext from '../VideoContext';
+
+import { ChromeCastOff, ChromeCastOn, Clickable } from './styles';
 
 const ChromeCastButton: React.FC = () => {
   const {
@@ -18,11 +19,10 @@ const ChromeCastButton: React.FC = () => {
     progress: { currentTime, seekableDuration },
     videoRate,
     selectedSubtitle,
+    startAt,
   } = useContext(VideoContext);
 
   const client = useRemoteMediaClient();
-
-  const sessionManager = GoogleCast.getSessionManager();
 
   useEffect(() => {
     if (client) {
@@ -48,21 +48,41 @@ const ChromeCastButton: React.FC = () => {
     }
   }, [client]);
 
+  useEffect(() => {
+    if (client) {
+      client.loadMedia({
+        mediaInfo: {
+          contentUrl:
+            typeof source !== 'number' && source?.uri ? source.uri : '',
+          metadata: {
+            images: [
+              {
+                url: thumbnail || '',
+              },
+            ],
+            title,
+            type: 'generic',
+            subtitle: selectedSubtitle?.value,
+          },
+          streamDuration: seekableDuration,
+        },
+        playbackRate: videoRate,
+        startTime: startAt || 0,
+      });
+    }
+  }, [source]);
+
   return (
     <>
-      <Button
-        title={client ? 'Stop' : 'Stream'}
-        onPress={() =>
-          client
-            ? sessionManager.endCurrentSession()
-            : GoogleCast.showCastDialog()
-        }
-      />
+      <Clickable onPress={() => GoogleCast.showCastDialog()}>
+        {client ? <ChromeCastOn /> : <ChromeCastOff />}
+      </Clickable>
       <CastButton
         style={{
-          width: 24,
-          height: 24,
-          tintColor: 'black',
+          width: 1,
+          height: 1,
+          tintColor: 'transparent',
+          position: 'absolute',
           display: 'none',
         }}
       />

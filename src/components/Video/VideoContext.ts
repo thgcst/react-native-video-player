@@ -27,6 +27,7 @@ export const _thumbnail = '' as string;
 export const _title = '' as string;
 export const _artist = '' as string;
 export const _videoRate = 1 as number;
+export const _startAt = 0 as number;
 
 interface IInitialValue {
   isPlaying: typeof _isPlaying;
@@ -38,9 +39,10 @@ interface IInitialValue {
   source: VideoProperties['source'];
   audioSource: VideoProperties['source'];
   thumbnail: VideoProperties['poster'];
-  title: string;
-  artist: string;
+  title: typeof _title;
+  artist: typeof _artist;
   videoRate: typeof _videoRate;
+  startAt?: typeof _startAt;
 }
 
 const initialValue: IInitialValue = {
@@ -56,6 +58,7 @@ const initialValue: IInitialValue = {
   title: _title,
   artist: _artist,
   videoRate: _videoRate,
+  startAt: _startAt,
 };
 
 const VideoContext = createContext(initialValue);

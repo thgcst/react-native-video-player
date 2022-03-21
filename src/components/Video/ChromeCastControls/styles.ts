@@ -1,25 +1,12 @@
-import { MotiView } from 'moti';
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 
 import FullScreenIcon from '~/assets/icons/player/fullscreen.svg';
 import PauseIcon from '~/assets/icons/player/pause.svg';
 import PlayIcon from '~/assets/icons/player/play.svg';
 import RewindIcon from '~/assets/icons/player/rewind.svg';
 import ConfigIcon from '~/assets/icons/player/settings.svg';
-import SubtitlesIcon from '~/assets/icons/player/subtitles.svg';
 
-export const Clickable = styled.TouchableOpacity.attrs({ activeOpacity: 1 })`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  justify-content: center;
-  align-items: center;
-`;
-
-export const Container = styled(MotiView)<{ portrait: boolean }>`
+export const Container = styled.View`
   flex: 1;
   width: 100%;
 
@@ -27,12 +14,6 @@ export const Container = styled(MotiView)<{ portrait: boolean }>`
   align-items: center;
 
   background-color: rgba(0, 0, 0, 0.8);
-
-  ${({ portrait, theme }) =>
-    !portrait &&
-    css`
-      padding: 0 ${theme.metrics.notchHeight}px;
-    `}
 `;
 
 export const WrapperCenterButtons = styled.View`
@@ -71,14 +52,8 @@ export const WrapperHeader = styled.View`
   width: 100%;
   align-items: center;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0 16px;
-`;
-
-export const HeaderRight = styled.View`
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 
 export const WrapperFooter = styled.TouchableOpacity.attrs({
@@ -92,13 +67,13 @@ export const WrapperFooter = styled.TouchableOpacity.attrs({
   padding: 0 16px;
 `;
 
-export const ClickableIcon = styled.TouchableOpacity``;
+export const ClickableIcon = styled.TouchableOpacity.attrs({
+  hitSlop: { top: 15, right: 15, bottom: 15, left: 15 },
+})``;
 
 export const FullScreen = styled(FullScreenIcon)<{ isFullscreen: boolean }>`
   margin-left: ${({ isFullscreen }) => (isFullscreen ? 46 : 20)}px;
 `;
-
-export const Subtitles = styled(SubtitlesIcon)``;
 
 export const Config = styled(ConfigIcon)`
   margin-left: 24px;
