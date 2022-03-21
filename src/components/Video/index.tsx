@@ -116,11 +116,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
       }}>
       <Container>
         {chromeCastClient ? (
-          <ChromeCastControls
-            setSelectedSubtitle={setSelectedSubtitle}
-            setVideoRate={setVideoRate}
-            setCurrentTime={e => setProgress(s => ({ ...s, currentTime: e }))}
-          />
+          <ChromeCastControls />
         ) : (
           <>
             <Video
