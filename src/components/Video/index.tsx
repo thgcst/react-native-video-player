@@ -12,6 +12,7 @@ import useOrientation from '~/hooks/useOrientation';
 
 import Controls from './Controls';
 import { useMusicControl } from './hooks/useMusicControl';
+import { usePiP } from './hooks/usePip';
 import LoadingIndicator from './LoadingIndicator';
 import VideoContext, {
   _isPlaying,
@@ -37,7 +38,7 @@ interface IVideoComponent {
   startAt?: number;
 }
 
-const VideoComponent: React.FC<IVideoComponent> = ({
+const VideoComponent = ({
   source,
   audioSource,
   thumbnail,
@@ -45,7 +46,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   artist,
   playOnMount = false,
   startAt,
-}) => {
+}: IVideoComponent) => {
   const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(playOnMount);
   const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
   const [audioOnly, setAudioOnly] = useState<typeof _audioOnly>(_audioOnly);
@@ -62,6 +63,8 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
   const orientation = useOrientation();
+
+  const { pipActive } = usePiP();
 
   const { setNowPlaying } = useMusicControl({
     isPlaying,
@@ -114,7 +117,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             height: '100%',
             backgroundColor: 'black',
           }}
-          pictureInPicture={false}
+          pictureInPicture={pipActive}
           ignoreSilentSwitch="ignore"
           allowsExternalPlayback
           playInBackground
@@ -161,9 +164,8 @@ const VideoComponent: React.FC<IVideoComponent> = ({
           progressUpdateInterval={1000}
           rate={videoRate}
         />
-        {isLoading ? (
-          <LoadingIndicator />
-        ) : (
+        {isLoading && <LoadingIndicator />}
+        {!isLoading && !pipActive && (
           <Controls
             ref={controlsRef}
             seekTo={e => videoRef.current?.seek(e)}
