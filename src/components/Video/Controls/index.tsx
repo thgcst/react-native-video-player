@@ -69,6 +69,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
     isPlaying,
     progress: { currentTime, playableDuration, seekableDuration },
     audioOnly,
+    subtitles,
   } = useContext(VideoContext);
   const [isControlsVisible, setIsControlsVisible] = useState(false);
   const [isSubtitleVisible, setIsSubtitleVisible] = useState(false);
@@ -141,7 +142,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                 <ClickableIcon
                   disabled={audioOnly}
                   onPress={() => setIsSubtitleVisible(true)}>
-                  {!audioOnly && <Subtitles />}
+                  {!audioOnly && subtitles.length > 0 && <Subtitles />}
                 </ClickableIcon>
                 <HeaderRight>
                   <ChromeCastButton />

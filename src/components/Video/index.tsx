@@ -1,5 +1,5 @@
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
-import { StatusBar, Switch } from 'react-native';
+import { Platform, StatusBar, Switch } from 'react-native';
 
 import { useRemoteMediaClient } from 'react-native-google-cast';
 import {
@@ -14,6 +14,7 @@ import useOrientation from '~/hooks/useOrientation';
 import ChromeCastControls from './ChromeCastControls';
 import Controls from './Controls';
 import { useMusicControl } from './hooks/useMusicControl';
+import { usePiP } from './hooks/usePip';
 import LoadingIndicator from './LoadingIndicator';
 import VideoContext, {
   _isPlaying,
@@ -39,7 +40,7 @@ interface IVideoComponent {
   startAt?: number;
 }
 
-const VideoComponent: React.FC<IVideoComponent> = ({
+const VideoComponent = ({
   source,
   audioSource,
   thumbnail,
@@ -47,7 +48,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   artist,
   playOnMount = false,
   startAt,
-}) => {
+}: IVideoComponent) => {
   const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(playOnMount);
   const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
   const [audioOnly, setAudioOnly] = useState<typeof _audioOnly>(_audioOnly);
@@ -64,6 +65,8 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
   const orientation = useOrientation();
+
+  const { pipActive } = usePiP();
 
   const { setNowPlaying } = useMusicControl({
     isPlaying,
@@ -128,7 +131,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
                 height: '100%',
                 backgroundColor: 'black',
               }}
-              pictureInPicture={false}
+              pictureInPicture={Platform.OS === 'ios' ? true : pipActive}
               ignoreSilentSwitch="ignore"
               allowsExternalPlayback
               playInBackground
@@ -150,7 +153,11 @@ const VideoComponent: React.FC<IVideoComponent> = ({
                   duration: e.duration,
                 });
                 setIsLoading(false);
-                setSubtitles(e.textTracks);
+                setSubtitles(
+                  e.textTracks.filter(
+                    item => item.language.toLocaleLowerCase() === 'pt-br',
+                  ),
+                );
                 setProgress({
                   currentTime: e.currentTime,
                   seekableDuration: e.duration,
@@ -175,9 +182,8 @@ const VideoComponent: React.FC<IVideoComponent> = ({
               progressUpdateInterval={1000}
               rate={videoRate}
             />
-            {isLoading ? (
-              <LoadingIndicator />
-            ) : (
+            {isLoading && <LoadingIndicator />}
+            {!isLoading && !pipActive && (
               <Controls
                 ref={controlsRef}
                 seekTo={e => videoRef.current?.seek(e)}
