@@ -67,6 +67,8 @@ const VideoComponent = ({
   const orientation = useOrientation();
   const { setOptions } = useNavigation();
 
+  const appState = AppState.addEventListener;
+
   const { setNowPlaying } = useMusicControl({
     isPlaying,
     playVideo: () => setIsPlaying(true),
@@ -103,14 +105,21 @@ const VideoComponent = ({
     }
   }, [orientation]);
 
-  AppState.addEventListener('change', async (state) => {
-    if (state === 'background') {
-      setPip(true);
-      AndroidPip.enterPictureInPictureMode()
-    } else {
-      setPip(false);
+
+  useEffect(() => {
+      const subscription = AppState.addEventListener('change', async (state) => {
+      if (state === 'background') {
+        setPip(true);
+        AndroidPip.enterPictureInPictureMode()
+      } else {
+        setPip(false);
+      }
+    })
+
+    return () => {
+      subscription.remove();
     }
-  })
+  },[appState])
 
   return (
     <VideoContext.Provider
