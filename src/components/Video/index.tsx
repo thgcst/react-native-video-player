@@ -8,7 +8,6 @@ import {
 } from 'react-native-navigation-bar-color';
 import Orientation from 'react-native-orientation-locker';
 import Video, { VideoProperties } from 'react-native-video';
-import AndroidPip from 'react-native-android-pip';
 
 import useOrientation from '~/hooks/useOrientation';
 
@@ -26,6 +25,7 @@ import VideoContext, {
 } from './VideoContext';
 
 import { HideOnLandscape } from '../OrientationView';
+import { usePiP } from '../../hooks/usePip';
 
 import { Container, WrapperSwitch, SwitchText } from './styles';
 
@@ -48,7 +48,6 @@ const VideoComponent = ({
   playOnMount = false,
   startAt,
 }: IVideoComponent) => {
-  const [pip, setPip] = useState(false);
   const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(playOnMount);
   const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
   const [audioOnly, setAudioOnly] = useState<typeof _audioOnly>(_audioOnly);
@@ -67,7 +66,8 @@ const VideoComponent = ({
   const orientation = useOrientation();
   const { setOptions } = useNavigation();
 
-  const appState = AppState.addEventListener;
+  const appState = AppState.currentState;
+  const { pipActive } = usePiP(appState)
 
   const { setNowPlaying } = useMusicControl({
     isPlaying,
@@ -91,9 +91,9 @@ const VideoComponent = ({
 
   useLayoutEffect(() => {
     setOptions({
-      headerShown: !pip
+      headerShown: !pipActive
     });
-  },[pip])
+  },[pipActive])
 
   useEffect(() => {
     if (orientation === 'PORTRAIT') {
@@ -105,21 +105,6 @@ const VideoComponent = ({
     }
   }, [orientation]);
 
-
-  useEffect(() => {
-      const subscription = AppState.addEventListener('change', async (state) => {
-      if (state === 'background') {
-        setPip(true);
-        AndroidPip.enterPictureInPictureMode()
-      } else {
-        setPip(false);
-      }
-    })
-
-    return () => {
-      subscription.remove();
-    }
-  },[appState])
 
   return (
     <VideoContext.Provider
@@ -142,7 +127,7 @@ const VideoComponent = ({
             height: '100%',
             backgroundColor: 'black',
           }}
-          pictureInPicture={true}
+          pictureInPicture={pipActive}
           ignoreSilentSwitch="ignore"
           allowsExternalPlayback
           playInBackground
@@ -190,7 +175,7 @@ const VideoComponent = ({
           rate={videoRate}
         />
         {isLoading && <LoadingIndicator />}
-        {!isLoading && !pip && (
+        {!isLoading && !pipActive && (
           <Controls
             ref={controlsRef}
             seekTo={e => videoRef.current?.seek(e)}
