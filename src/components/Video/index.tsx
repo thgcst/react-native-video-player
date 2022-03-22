@@ -1,5 +1,6 @@
-import React, { ElementRef, useEffect, useRef, useState } from 'react';
-import { StatusBar, Switch } from 'react-native';
+import React, { ElementRef, useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { StatusBar, Switch, AppState } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import {
   hideNavigationBar,
@@ -7,6 +8,7 @@ import {
 } from 'react-native-navigation-bar-color';
 import Orientation from 'react-native-orientation-locker';
 import Video, { VideoProperties } from 'react-native-video';
+import AndroidPip from 'react-native-android-pip';
 
 import useOrientation from '~/hooks/useOrientation';
 
@@ -37,7 +39,7 @@ interface IVideoComponent {
   startAt?: number;
 }
 
-const VideoComponent: React.FC<IVideoComponent> = ({
+const VideoComponent = ({
   source,
   audioSource,
   thumbnail,
@@ -45,7 +47,8 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   artist,
   playOnMount = false,
   startAt,
-}) => {
+}: IVideoComponent) => {
+  const [pip, setPip] = useState(false);
   const [isPlaying, setIsPlaying] = useState<typeof _isPlaying>(playOnMount);
   const [isLoading, setIsLoading] = useState<typeof _isLoading>(_isLoading);
   const [audioOnly, setAudioOnly] = useState<typeof _audioOnly>(_audioOnly);
@@ -62,6 +65,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
   const controlsRef = useRef<ElementRef<typeof Controls>>(null);
 
   const orientation = useOrientation();
+  const { setOptions } = useNavigation();
 
   const { setNowPlaying } = useMusicControl({
     isPlaying,
@@ -83,6 +87,12 @@ const VideoComponent: React.FC<IVideoComponent> = ({
     }
   };
 
+  useLayoutEffect(() => {
+    setOptions({
+      headerShown: !pip
+    });
+  },[pip])
+
   useEffect(() => {
     if (orientation === 'PORTRAIT') {
       StatusBar.setHidden(false);
@@ -92,6 +102,15 @@ const VideoComponent: React.FC<IVideoComponent> = ({
       hideNavigationBar();
     }
   }, [orientation]);
+
+  AppState.addEventListener('change', async (state) => {
+    if (state === 'background') {
+      setPip(true);
+      AndroidPip.enterPictureInPictureMode()
+    } else {
+      setPip(false);
+    }
+  })
 
   return (
     <VideoContext.Provider
@@ -114,7 +133,7 @@ const VideoComponent: React.FC<IVideoComponent> = ({
             height: '100%',
             backgroundColor: 'black',
           }}
-          pictureInPicture={false}
+          pictureInPicture={true}
           ignoreSilentSwitch="ignore"
           allowsExternalPlayback
           playInBackground
@@ -161,18 +180,19 @@ const VideoComponent: React.FC<IVideoComponent> = ({
           progressUpdateInterval={1000}
           rate={videoRate}
         />
-        {isLoading ? (
-          <LoadingIndicator />
-        ) : (
+        {isLoading && <LoadingIndicator />}
+        {!isLoading && !pip && (
           <Controls
             ref={controlsRef}
             seekTo={e => videoRef.current?.seek(e)}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             setSelectedSubtitle={setSelectedSubtitle}
-            setVideoRate={setVideoRate}
-          />
+            setVideoRate={setVideoRate}/>
         )}
+
+
+
       </Container>
       <HideOnLandscape>
         <WrapperSwitch>
