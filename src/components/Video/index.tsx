@@ -1,5 +1,5 @@
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
-import { StatusBar, Switch } from 'react-native';
+import { Platform, StatusBar, Switch } from 'react-native';
 
 import {
   hideNavigationBar,
@@ -117,7 +117,7 @@ const VideoComponent = ({
             height: '100%',
             backgroundColor: 'black',
           }}
-          pictureInPicture={pipActive}
+          pictureInPicture={Platform.OS === 'ios' ? true : pipActive}
           ignoreSilentSwitch="ignore"
           allowsExternalPlayback
           playInBackground
@@ -139,7 +139,11 @@ const VideoComponent = ({
               duration: e.duration,
             });
             setIsLoading(false);
-            setSubtitles(e.textTracks);
+            setSubtitles(
+              e.textTracks.filter(
+                item => item.language.toLocaleLowerCase() === 'pt-br',
+              ),
+            );
             setProgress({
               currentTime: e.currentTime,
               seekableDuration: e.duration,
