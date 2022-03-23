@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 
+import { useRemoteMediaClient } from 'react-native-google-cast';
 import MusicControl, { Command } from 'react-native-music-control';
 
 interface UseMusicControlProps {
@@ -18,50 +19,56 @@ export function useMusicControl({
   seek,
   currentTime,
 }: UseMusicControlProps) {
+  const chromeCastClient = useRemoteMediaClient();
+
   useEffect(() => {
-    MusicControl.enableBackgroundMode(true);
-    if (Platform.OS === 'ios') {
-      MusicControl.handleAudioInterruptions(true);
+    if (chromeCastClient) {
+      MusicControl.resetNowPlaying();
+    } else {
+      MusicControl.enableBackgroundMode(true);
+      if (Platform.OS === 'ios') {
+        MusicControl.handleAudioInterruptions(true);
+      }
+
+      // Basic Controls
+      MusicControl.enableControl('play', true);
+      MusicControl.enableControl('pause', true);
+      MusicControl.enableControl('stop', false);
+      MusicControl.enableControl('nextTrack', false);
+      MusicControl.enableControl('previousTrack', false);
+      MusicControl.enableControl('changePlaybackPosition', true);
+
+      MusicControl.enableControl('seekBackward', false);
+      MusicControl.enableControl('seekForward', false);
+      MusicControl.enableControl('seek', false);
+      MusicControl.enableControl('skipBackward', true, { interval: 10 });
+      MusicControl.enableControl('skipForward', true, { interval: 10 });
+
+      MusicControl.enableControl('volume', false);
+      MusicControl.enableControl('remoteVolume', false);
+
+      MusicControl.enableControl('enableLanguageOption', false);
+      MusicControl.enableControl('disableLanguageOption', false);
+
+      MusicControl.enableControl('closeNotification', true, { when: 'never' });
+
+      MusicControl.on(Command.play, () => {
+        playVideo();
+      });
+
+      MusicControl.on(Command.pause, () => {
+        pauseVideo();
+      });
+
+      MusicControl.on(Command.changePlaybackPosition, pos => {
+        seek(pos);
+      });
     }
-
-    // Basic Controls
-    MusicControl.enableControl('play', true);
-    MusicControl.enableControl('pause', true);
-    MusicControl.enableControl('stop', false);
-    MusicControl.enableControl('nextTrack', false);
-    MusicControl.enableControl('previousTrack', false);
-    MusicControl.enableControl('changePlaybackPosition', true);
-
-    MusicControl.enableControl('seekBackward', false);
-    MusicControl.enableControl('seekForward', false);
-    MusicControl.enableControl('seek', false);
-    MusicControl.enableControl('skipBackward', true, { interval: 10 });
-    MusicControl.enableControl('skipForward', true, { interval: 10 });
-
-    MusicControl.enableControl('volume', false);
-    MusicControl.enableControl('remoteVolume', false);
-
-    MusicControl.enableControl('enableLanguageOption', false);
-    MusicControl.enableControl('disableLanguageOption', false);
-
-    MusicControl.enableControl('closeNotification', true, { when: 'never' });
-
-    MusicControl.on(Command.play, () => {
-      playVideo();
-    });
-
-    MusicControl.on(Command.pause, () => {
-      pauseVideo();
-    });
-
-    MusicControl.on(Command.changePlaybackPosition, pos => {
-      seek(pos);
-    });
 
     return () => {
       MusicControl.resetNowPlaying();
     };
-  }, []);
+  }, [chromeCastClient]);
 
   useEffect(() => {
     if (isPlaying) {

@@ -1,6 +1,7 @@
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
 import { Platform, StatusBar, Switch } from 'react-native';
 
+import { useRemoteMediaClient } from 'react-native-google-cast';
 import {
   hideNavigationBar,
   showNavigationBar,
@@ -10,6 +11,7 @@ import Video, { VideoProperties } from 'react-native-video';
 
 import useOrientation from '~/hooks/useOrientation';
 
+import ChromeCastControls from './ChromeCastControls';
 import Controls from './Controls';
 import { useMusicControl } from './hooks/useMusicControl';
 import { usePiP } from './hooks/usePip';
@@ -96,6 +98,8 @@ const VideoComponent = ({
     }
   }, [orientation]);
 
+  const chromeCastClient = useRemoteMediaClient();
+
   return (
     <VideoContext.Provider
       value={{
@@ -105,79 +109,91 @@ const VideoComponent = ({
         progress,
         subtitles,
         selectedSubtitle,
+        source,
+        audioSource,
+        thumbnail,
+        title,
+        artist,
         videoRate,
+        startAt,
       }}>
       <Container>
-        <Video
-          source={audioOnly ? audioSource : source}
-          ref={videoRef}
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'black',
-          }}
-          pictureInPicture={Platform.OS === 'ios' ? true : pipActive}
-          ignoreSilentSwitch="ignore"
-          allowsExternalPlayback
-          playInBackground
-          playWhenInactive
-          poster={thumbnail}
-          posterResizeMode="cover"
-          controls={false}
-          resizeMode="contain"
-          paused={!isPlaying}
-          onLoadStart={() => setIsLoading(true)}
-          onLoad={e => {
-            if (startAt) {
-              videoRef.current?.seek(startAt);
-            }
-            setNowPlaying({
-              title,
-              thumbnail,
-              artist,
-              duration: e.duration,
-            });
-            setIsLoading(false);
-            setSubtitles(
-              e.textTracks.filter(
-                item => item.language.toLocaleLowerCase() === 'pt-br',
-              ),
-            );
-            setProgress({
-              currentTime: e.currentTime,
-              seekableDuration: e.duration,
-              playableDuration: 0,
-            });
-            if (previousCurrentTime) {
-              videoRef.current?.seek(previousCurrentTime);
-              setPreviousCurrentTime(null);
-            }
-          }}
-          selectedTextTrack={selectedSubtitle}
-          onSeek={e => {
-            setProgress(previousValue => ({
-              ...previousValue,
-              currentTime: e.currentTime,
-            }));
-            controlsRef.current?.setIsSeeking?.(false);
-          }}
-          onProgress={e => {
-            setProgress(e);
-          }}
-          progressUpdateInterval={1000}
-          rate={videoRate}
-        />
-        {isLoading && <LoadingIndicator />}
-        {!isLoading && !pipActive && (
-          <Controls
-            ref={controlsRef}
-            seekTo={e => videoRef.current?.seek(e)}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-            setSelectedSubtitle={setSelectedSubtitle}
-            setVideoRate={setVideoRate}
-          />
+        {chromeCastClient ? (
+          <ChromeCastControls />
+        ) : (
+          <>
+            <Video
+              source={audioOnly ? audioSource : source}
+              ref={videoRef}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'black',
+              }}
+              pictureInPicture={Platform.OS === 'ios' ? true : pipActive}
+              ignoreSilentSwitch="ignore"
+              allowsExternalPlayback
+              playInBackground
+              playWhenInactive
+              poster={thumbnail}
+              posterResizeMode="cover"
+              controls={false}
+              resizeMode="contain"
+              paused={!isPlaying}
+              onLoadStart={() => setIsLoading(true)}
+              onLoad={e => {
+                if (startAt) {
+                  videoRef.current?.seek(startAt);
+                }
+                setNowPlaying({
+                  title,
+                  thumbnail,
+                  artist,
+                  duration: e.duration,
+                });
+                setIsLoading(false);
+                setSubtitles(
+                  e.textTracks.filter(
+                    item => item.language.toLocaleLowerCase() === 'pt-br',
+                  ),
+                );
+                setProgress({
+                  currentTime: e.currentTime,
+                  seekableDuration: e.duration,
+                  playableDuration: 0,
+                });
+                if (previousCurrentTime) {
+                  videoRef.current?.seek(previousCurrentTime);
+                  setPreviousCurrentTime(null);
+                }
+              }}
+              selectedTextTrack={selectedSubtitle}
+              onSeek={e => {
+                setProgress(previousValue => ({
+                  ...previousValue,
+                  currentTime: e.currentTime,
+                }));
+                controlsRef.current?.setIsSeeking?.(false);
+              }}
+              onProgress={e => {
+                setProgress(e);
+              }}
+              progressUpdateInterval={1000}
+              rate={videoRate}
+            />
+            {isLoading && <LoadingIndicator />}
+            {!isLoading && !pipActive && (
+              <Controls
+                ref={controlsRef}
+                seekTo={e => videoRef.current?.seek(e)}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                setSelectedSubtitle={setSelectedSubtitle}
+                setVideoRate={setVideoRate}
+              />
+            )}
+          </>
         )}
       </Container>
       <HideOnLandscape>
@@ -187,6 +203,7 @@ const VideoComponent = ({
             ios_backgroundColor="#e0bf5a"
             value={audioOnly}
             onValueChange={toggleAudioOnly}
+            disabled={!!chromeCastClient}
           />
         </WrapperSwitch>
       </HideOnLandscape>

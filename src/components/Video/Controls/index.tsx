@@ -15,6 +15,7 @@ import Orientation, {
 
 import useOrientation from '~/hooks/useOrientation';
 
+import ChromeCastButton from '../ChromeCastButton';
 import ConfigMenu from '../ConfigMenu';
 import Slider from '../Slider';
 import SubtitlesMenu from '../SubtitlesMenu';
@@ -31,6 +32,7 @@ import {
   Rewind,
   FastForward,
   WrapperHeader,
+  HeaderRight,
   WrapperFooter,
   ClickableIcon,
   FullScreen,
@@ -142,9 +144,12 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
                   onPress={() => setIsSubtitleVisible(true)}>
                   {!audioOnly && subtitles.length > 0 && <Subtitles />}
                 </ClickableIcon>
-                <ClickableIcon onPress={() => setIsConfigVisible(true)}>
-                  <Config />
-                </ClickableIcon>
+                <HeaderRight>
+                  <ChromeCastButton />
+                  <ClickableIcon onPress={() => setIsConfigVisible(true)}>
+                    <Config />
+                  </ClickableIcon>
+                </HeaderRight>
               </WrapperHeader>
               <WrapperCenterButtons>
                 <ControlButton
