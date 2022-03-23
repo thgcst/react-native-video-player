@@ -182,7 +182,7 @@ const VideoComponent = ({
       </Container>
       <HideOnLandscape>
         <WrapperSwitch>
-          <SwitchText>Somente áudio</SwitchText>
+          <SwitchText>Reproduzir como áudio</SwitchText>
           <Switch
             ios_backgroundColor="#e0bf5a"
             value={audioOnly}

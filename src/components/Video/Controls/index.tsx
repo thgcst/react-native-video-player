@@ -125,7 +125,7 @@ const Controls: React.ForwardRefRenderFunction<ControlsRef, IControls> = (
           setIsControlsVisible(e => !e);
         }}>
         <AnimatePresence>
-          {isControlsVisible && (
+          {(isControlsVisible || audioOnly) && (
             <Container
               from={{ opacity: 0 }}
               animate={{ opacity: 1 }}
