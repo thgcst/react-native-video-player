@@ -487,9 +487,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = videoplayer/videoplayer.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WYX45639BM;
+				DEVELOPMENT_TEAM = 5B6733M688;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = videoplayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -499,7 +500,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.videoplayer.tt;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vortigo.poc.videoplayer.uol;
 				PRODUCT_NAME = videoplayer;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -515,8 +516,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = videoplayer/videoplayer.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WYX45639BM;
+				DEVELOPMENT_TEAM = 5B6733M688;
 				INFOPLIST_FILE = videoplayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -526,7 +528,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.videoplayer.tt;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vortigo.poc.videoplayer.uol;
 				PRODUCT_NAME = videoplayer;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
